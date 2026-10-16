@@ -9,9 +9,10 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="preload" as="image" href="assets/thermal_abstract_clean_poster.webp" fetchpriority="high" />
 <style>
-  :root { --slow: 2; --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --title-fs: min(max(3vw, 5.3333vh), 8vw); --title-top: calc(110px + 5.3333vh - var(--title-fs) * .56); --text-top: calc(var(--title-top) + var(--title-fs) * .56 + 5.3333vh + 44px); --pad-x: clamp(20px, 6vw, 64px); }
-  @media (max-width: 1200px) { :root { --pad-x: 24px; } }
+  :root { --slow: 1; --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --accent: #8b5cf6; --head-gap: clamp(14px, 3.2vh, 48px); --headline-fs: min(12vw, 220px, 24vh); --section-fs: var(--headline-fs); --body-lift: 26px; --lift: max(0px, 40px + (1200px - 100vw) * 0.1); --title-fs: min(max(3vw, 5.3333vh), 8vw); --title-top: calc(110px + 5.3333vh - var(--title-fs) * .56); --text-top: calc(var(--title-top) + var(--title-fs) * .56 + 5.3333vh + 44px - var(--lift)); --pad-x: clamp(20px, 6vw, 64px); }
+  @media (max-width: 1200px) { :root { --pad-x: 24px; --headline-fs: min(8.5vw, 200px, 20vh); --section-fs: min(12.75vw, 300px, 30vh); } }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -53,6 +54,12 @@
   .hdr.is-open .hdr__toggle .ico-menu { display: none; }
   .hdr.is-open .hdr__toggle .ico-close { display: block; }
   .hdr__nav a.hdr__nav-cta { display: none; }
+  .hdr__nav { position: relative; }
+  .hdr__nav-glow { position: absolute; left: 0; bottom: -1px; width: 0; height: 1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(139,92,246,0), #a78bfa, rgba(139,92,246,0)); box-shadow: 0 0 10px 1px rgba(139,92,246,.75); opacity: 0; pointer-events: none; transition: left .45s cubic-bezier(.16,1,.3,1), width .45s cubic-bezier(.16,1,.3,1), opacity .3s ease; }
+  .hdr__nav-glow.is-on { opacity: 1; animation: navGlow 2.6s ease-in-out infinite; }
+  @keyframes navGlow { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  @media (max-width: 1023px) { .hdr__nav-glow { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .hdr__nav-glow.is-on { animation: none; opacity: .85; } }
   @media (max-width: 1023px) {
     .hdr__toggle { display: inline-flex; }
     .hdr__cta { display: none; }
@@ -67,23 +74,26 @@
   .hero { position: relative; height: 100dvh; overflow: hidden; }
 
   /* ---------- sections below hero ---------- */
-  .section { position: relative; height: calc(1210dvh * var(--slow)); z-index: 1; background: #000; }
+  .section { position: relative; height: calc(850dvh * var(--slow)); z-index: 1; background: #000; }
   .section__anchor { position: absolute; left: 0; width: 1px; height: 1px; }
-  .section__anchor--services { top: calc((4.75 * var(--slow) - 1) * 100dvh); }
-  .section__anchor--expertise { top: calc((7.05 * var(--slow) - 1) * 100dvh); }
-  .section__anchor--projects { top: calc((10.67 * var(--slow) - 1) * 100dvh); }
-  .glow, .glow-b { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; z-index: 2; overflow: hidden; pointer-events: none; transform: translateY(100%); }
+  .section__anchor--services { top: calc((1.55 * var(--slow) - 1) * 100dvh); }
+  .section__anchor--expertise { top: calc((3.3 * var(--slow) - 1) * 100dvh); }
+  .section__anchor--projects { top: calc((5.85 * var(--slow) - 1) * 100dvh); }
+  .section__anchor--about { top: calc((8.05 * var(--slow) - 1) * 100dvh); }
+  .glow { position: sticky; top: 0; left: 0; width: 100%; height: 100dvh; z-index: 0; overflow: hidden; pointer-events: none; }
+  .glow-b { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; z-index: 2; overflow: hidden; pointer-events: none; transform: translateY(100%); }
   .glow::before, .glow-b::before { content: ""; position: absolute; top: 0; left: 0; height: 100%; width: 200%; pointer-events: none;
     animation: sectionFlow 45s linear infinite;
   }
+  .glow.is-idle::before, .glow-b.is-idle::before { animation-play-state: paused; }
   .glow::before {
     background-image: linear-gradient(90deg,
       #020082 0%, #2a0170 5%, #47023c 10%, #7a0a1b 15%, #a52e12 19%, #a75613 23%, #b88831 27%, #bb9c42 31%,
       #b08d36 35%, #9c6d28 38%, #8a5a52 42%, #4a2f72 45%, #22106a 48%, #020082 50%,
       #2a0170 55%, #47023c 60%, #7a0a1b 65%, #a52e12 69%, #a75613 73%, #b88831 77%, #bb9c42 81%,
       #b08d36 85%, #9c6d28 88%, #8a5a52 92%, #4a2f72 95%, #22106a 98%, #020082 100%);
-    opacity: .5; filter: blur(50px) brightness(.72);
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 4%, transparent 30%); mask-image: linear-gradient(180deg, #000 0%, #000 4%, transparent 30%);
+    opacity: .36;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 4%, transparent 60%); mask-image: linear-gradient(180deg, #000 0%, #000 4%, transparent 60%);
   }
   .glow-b::before {
     background-image: linear-gradient(90deg,
@@ -91,68 +101,179 @@
       #b08d36 35%, #9c6d28 38%, #8a5a52 42%, #4a2f72 45%, #22106a 48%, #020082 50%,
       #2a0170 55%, #47023c 60%, #7a0a1b 65%, #a52e12 69%, #a75613 73%, #b88831 77%, #bb9c42 81%,
       #b08d36 85%, #9c6d28 88%, #8a5a52 92%, #4a2f72 95%, #22106a 98%, #020082 100%);
-    filter: blur(50px) brightness(.72);
-    -webkit-mask-image: linear-gradient(0deg, #000 0%, #000 4%, transparent 30%); mask-image: linear-gradient(0deg, #000 0%, #000 4%, transparent 30%); animation-direction: reverse;
+    opacity: .36;
+    -webkit-mask-image: linear-gradient(0deg, #000 0%, #000 4%, transparent 60%); mask-image: linear-gradient(0deg, #000 0%, #000 4%, transparent 60%); animation-direction: reverse;
   }
   @keyframes sectionFlow {
     from { transform: translateX(-50%); }
     to   { transform: translateX(0); }
   }
 
-  .brand-band { position: fixed; left: 50%; top: 46%; width: min(780px, 72vw); height: 240px; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; opacity: 0; filter: blur(90px); background: linear-gradient(90deg, #22106a, #47023c, #a52e12, #b88831, #bb9c42, #8a5a52, #4a2f72); }
-
   /* ---------- services scene (phase 3) ---------- */
   .services { position: fixed; inset: 0; z-index: 3; pointer-events: none; text-align: center; }
   .services__title { position: absolute; left: 0; right: 0; top: var(--title-top); z-index: 3; margin: 0; display: grid; font-family: var(--font); font-weight: 500; letter-spacing: -.01em; line-height: 1.12; color: #fff; font-size: var(--title-fs); opacity: 0; translate: 0 -.085em; }
   .svc-word { grid-area: 1 / 1; }
-  .services__body { position: absolute; left: 0; right: 0; top: var(--text-top); bottom: 24px; padding-inline: var(--pad-x); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; gap: 14px; }
+  .services__body { position: absolute; left: 0; right: 0; top: calc(var(--text-top) + 24px - var(--body-lift)); bottom: 24px; padding: var(--head-gap) var(--pad-x) 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; }
   .services__stage { position: absolute; inset: 0; pointer-events: none; }
+  /* ---------- big intro word «Услуги» (replaces the old top title) ---------- */
+  .svc-intro { --svc-pad-y: .26em; position: fixed; inset: 0; z-index: 2; display: flex; align-items: flex-end; justify-content: center; padding-bottom: calc(100vh - var(--text-top) - var(--head-gap) - 22px - var(--svc-pad-y) - .2 * var(--section-fs)); pointer-events: none; opacity: 0; mix-blend-mode: overlay; color: #fff; font-family: var(--font); font-weight: 500; letter-spacing: -.03em; line-height: 1; white-space: nowrap; font-size: var(--section-fs); will-change: opacity; }
+  .svc-intro__word { padding: var(--svc-pad-y) .06em; color: #fff; will-change: transform, opacity; }
+  .svc-intro.is-sec { mix-blend-mode: normal; }
+  .svc-intro.is-sec .svc-intro__word { background-image: linear-gradient(180deg, rgba(255,255,255,.52) 0%, rgba(255,255,255,.18) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+  .svc-intro.swap-out .svc-intro__word { animation: headOut .24s cubic-bezier(.4,0,.8,1) both; }
+  .svc-intro.swap .svc-intro__word { animation: headIn .45s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes headOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-14px); } }
+  @keyframes headIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .svc-intro { will-change: auto; } }
 
   /* ---------- expertise scene (phase 4) ---------- */
-  .expertise { position: absolute; left: 0; right: 0; top: var(--text-top); bottom: 24px; padding-inline: var(--pad-x); display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; gap: 14px; pointer-events: none; opacity: 0; }
+  .expertise { position: absolute; left: 0; right: 0; top: calc(var(--text-top) + 24px - var(--body-lift)); bottom: 24px; padding: var(--head-gap) var(--pad-x) 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 0; pointer-events: none; opacity: 0; }
   .expertise.open { pointer-events: auto; }
-  .expertise__head { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 24px; }
-  .expertise__lead { margin: 0; color: rgba(255,255,255,.9); font-size: clamp(13px, .9vw, 21px); line-height: 1.6; white-space: nowrap; text-align: center; }
-  .expertise__chips { width: 100%; max-width: 1220px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 auto; padding: 0; list-style: none; }
-  .expertise__chips li { display: inline-flex; align-items: center; gap: 9px; padding: 4px 11px; font-size: clamp(10px, .7vw, 12px); white-space: nowrap; border: 1px solid rgba(255,255,255,.06); border-radius: 100px; background: rgba(255,255,255,.08); color: #fff; }
-  .expertise__chips li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--dot, #e8b84b); box-shadow: 0 0 8px 0 color-mix(in srgb, var(--dot, #e8b84b) 60%, transparent); }
-  .expertise__grid { width: 100%; max-width: 1680px; margin-inline: auto; margin-top: 6vh; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); flex: 0 0 auto; }
-  .expertise__card { position: relative; margin: 0; padding: 36px 22px; border: 1px solid rgba(255,255,255,.08); border-top: 2px solid rgba(139,92,246,.42); border-radius: 18px; background: rgba(255,255,255,.055); display: flex; flex-direction: column; overflow: hidden; text-align: left; }
-  .expertise__card-badge { position: absolute; top: 24px; right: 24px; width: clamp(28px, 3.5vw, 64px); height: auto; display: block; }
-  .expertise__card-title { margin: 0 0 26px; font-family: var(--font); font-weight: 600; font-size: clamp(15px, 1.35vw, 26px); line-height: 1.15; letter-spacing: -.01em; color: #fff; flex: 0 0 auto; }
-  .expertise__card-text { margin: 0; font-size: clamp(12px, .8vw, 15px); line-height: 1.55; color: rgba(255,255,255,.62); overflow: hidden; }
+  .expertise__head { width: 100%; display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2.4vh, 24px); }
+  .expertise__lead { margin: 0; color: rgba(255,255,255,.9); font-size: clamp(13px, .9vw, 21px); line-height: 1.5; white-space: nowrap; text-align: center; }
+  .expertise__chips { width: 100%; max-width: 1440px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 6px; margin: auto; padding: 0; list-style: none; }
+  .expertise__chips li { display: inline-flex; align-items: center; gap: 9px; padding: 5px 13px; font-size: clamp(11px, min(.95vw, 1.9vh), 14px); white-space: nowrap; border: 1px solid rgba(255,255,255,.08); border-radius: 100px; background: rgba(255,255,255,.09); color: #fff; }
+  .expertise__chips li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--dot, #e8b84b); box-shadow: 0 0 9px 0 color-mix(in srgb, var(--dot, #e8b84b) 60%, transparent); }
+  /* variety of dot colours per tag (desktop + mobile), cycling every five */
+  .expertise__chips li:nth-child(5n+1), #m-expertise .mfeed__chips li:nth-child(5n+1) { --dot: #8b5cf6; }
+  .expertise__chips li:nth-child(5n+2), #m-expertise .mfeed__chips li:nth-child(5n+2) { --dot: #4a9eff; }
+  .expertise__chips li:nth-child(5n+3), #m-expertise .mfeed__chips li:nth-child(5n+3) { --dot: #e8b84b; }
+  .expertise__chips li:nth-child(5n+4), #m-expertise .mfeed__chips li:nth-child(5n+4) { --dot: #e11d2a; }
+  .expertise__chips li:nth-child(5n+5), #m-expertise .mfeed__chips li:nth-child(5n+5) { --dot: #22c55e; }
+  /* expertise: three cards (swapped with the Услуги text columns) */
+  .expertise__list { width: 100%; max-width: 1680px; margin-inline: auto; margin-top: clamp(28px, 7vh, 88px); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); }
+  .expertise__row { position: relative; display: flex; flex-direction: column; gap: clamp(10px, 1.6vh, 20px); padding: 36px 22px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: linear-gradient(160deg, rgba(139,92,246,.09), rgba(255,255,255,.06) 55%); text-align: left; opacity: 0; overflow: hidden; transition: border-color .3s ease, box-shadow .3s ease; }
+  .expertise__row:hover { border-color: rgba(139,92,246,.55); box-shadow: 0 16px 44px rgba(0,0,0,.38); }
+  .expertise__row-heading { position: relative; display: flex; align-items: center; justify-content: space-between; gap: clamp(8px, 1vw, 14px); }
+  /* the badge is taken out of flow so it never pushes the 3rd card's title/text
+     down; title and text then line up with the other cards and stay clear of it */
+  .expertise__row-heading:has(.expertise__row-badge) { padding-right: calc(clamp(34px, min(3.7vw, 5.8vh), 68px) + 16px); }
+  .expertise__row:has(.expertise__row-badge) .expertise__row-text { padding-right: calc(clamp(34px, min(3.7vw, 5.8vh), 68px) + 16px); }
+  .expertise__row-title { margin: 0; font-weight: 600; font-size: clamp(15px, 1.35vw, 26px); line-height: 1.15; letter-spacing: -.01em; color: #fff; }
+  .expertise__row-badge { position: absolute; top: 0; right: 0; display: block; width: clamp(34px, min(3.7vw, 5.8vh), 68px); height: auto; opacity: .94; }
+  .expertise__row-text { margin: 0; font-size: clamp(12px, .8vw, 15px); line-height: 1.55; color: rgba(255,255,255,.62); transition: color .3s ease; }
+  .expertise__row:hover .expertise__row-text { color: rgba(255,255,255,.78); }
   .expertise.in, .expertise.out { opacity: 1; }
   .expertise__lead, .expertise__chips--products { opacity: 0; }
-  .expertise__lead.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .18s both; }
-  .expertise__chips--products.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .3s both; }
-  .expertise__card { opacity: 0; }
-  .expertise__grid.in .expertise__card { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .42s both; }
-  .expertise__grid.in .expertise__card:nth-child(2) { animation-delay: .5s; }
-  .expertise__grid.in .expertise__card:nth-child(3) { animation-delay: .58s; }
-  .expertise__lead.out { animation: heroOut .6s cubic-bezier(.3,0,.2,1) both; }
-  .expertise__chips--products.out { animation: heroOut .6s cubic-bezier(.3,0,.2,1) .12s both; }
-  .expertise__grid.out .expertise__card { animation: heroOut .6s cubic-bezier(.3,0,.2,1) both; }
-  .expertise__grid.out .expertise__card:nth-child(2) { animation-delay: .08s; }
-  .expertise__grid.out .expertise__card:nth-child(3) { animation-delay: .16s; }
-  @media (max-width: 1200px) { .expertise__card-badge { width: clamp(24px, 3vw, 40px); top: 16px; right: 16px; } }
+  /* large screens: lead at top, cards centered between the lead and the chips,
+     chips pushed down to the bottom of the section */
+  @media (min-width: 1201px) {
+    .expertise { justify-content: space-between; }
+    .expertise__list { margin-top: 0; }
+    .expertise__chips { margin: 0 0 184px; }
+  }
+  @media (max-width: 1200px) {
+    /* small screens: pin the tags to the bottom, 24px above the screen edge
+       (the section's own bottom is 24px) */
+    .expertise__chips { margin-top: auto; margin-bottom: 0; }
+  }
+  @media (max-width: 900px) {
+    .expertise__list { grid-template-columns: 1fr; margin-top: clamp(6px, 1.2vh, 18px); gap: 8px; }
+    .expertise__row, .expertise__row:not(:first-child) { padding: 16px 14px; }
+  }
 
   /* ---------- projects scene (phase 5) ---------- */
-  .projects { --rail-w: min(38vw, 560px); --mid-gap: 48px; position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 1; }
+  .projects { --mid-gap: 48px; position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 1; }
   .projects.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .2s both; }
   .projects.out { animation: heroOut .6s cubic-bezier(.3,0,.2,1) both; }
-  .projects__rail { position: absolute; left: auto; right: calc(50% + var(--mid-gap)); top: 100%; width: var(--rail-w); display: flex; flex-direction: column; gap: clamp(24px, 5vh, 72px); z-index: 1; }
-  .projects__caption { position: absolute; left: var(--side-left, calc(50% + var(--mid-gap))); right: var(--pad-x); top: var(--text-top); display: flex; flex-direction: column; gap: 12px; text-align: left; z-index: 1; }
+  .projects__rail { position: absolute; left: auto; right: calc(50% + var(--mid-gap)); top: 100%; width: calc(50% - var(--mid-gap) - var(--pad-x)); display: flex; flex-direction: column; gap: clamp(36px, 7.5vh, 108px); z-index: 1; }
+  .projects__caption { position: absolute; left: var(--side-left, calc(50% + var(--mid-gap))); right: var(--pad-x); top: calc(var(--text-top) - var(--body-lift)); display: flex; flex-direction: column; gap: 12px; text-align: left; z-index: 1; }
   .projects__caption-title { margin: 0; font-family: var(--font); font-weight: 600; font-size: clamp(19px, 1.5vw, 30px); line-height: 1.15; letter-spacing: -.01em; color: #fff; }
   .projects__caption-text { margin: 0; max-width: min(440px, 100%); font-size: clamp(13px, .85vw, 16px); line-height: 1.5; color: rgba(255,255,255,.62); }
-  @keyframes capSwap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .projects__caption.swap .projects__caption-title, .projects__caption.swap .projects__caption-text { animation: capSwap .45s cubic-bezier(.16,1,.3,1) both; }
-  .projects__clients { position: absolute; left: var(--side-left, calc(50% + var(--mid-gap))); right: var(--pad-x); bottom: -12px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; z-index: 1; }
-  .client-badge { display: block; }
+  .projects__caption-link { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin: 8px 0 0; font-size: clamp(12px, .82vw, 15px); line-height: 1.5; color: #fff; text-decoration: none; transition: opacity .18s ease; }
+  .projects__caption-link:hover { opacity: .7; }
+  .projects__caption-link svg { flex: none; width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  @keyframes capSwapIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes capSwapOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-12px); } }
+  .projects__caption.swap .projects__caption-title { animation: capSwapIn .55s cubic-bezier(.16,1,.3,1) both; }
+  .projects__caption.swap .projects__caption-text { animation: capSwapIn .55s cubic-bezier(.16,1,.3,1) .1s both; }
+  .projects__caption.swap .projects__caption-link { animation: capSwapIn .55s cubic-bezier(.16,1,.3,1) .18s both; }
+  .projects__caption.swap-out .projects__caption-title { animation: capSwapOut .24s cubic-bezier(.4,0,.8,1) both; }
+  .projects__caption.swap-out .projects__caption-text { animation: capSwapOut .24s cubic-bezier(.4,0,.8,1) .06s both; }
+  .projects__caption.swap-out .projects__caption-link { animation: capSwapOut .24s cubic-bezier(.4,0,.8,1) .12s both; }
+  .projects__clients { position: absolute; left: calc(var(--side-left, calc(50% + var(--mid-gap))) + 18px); right: calc(var(--pad-x) + clamp(30px, 6vw, 140px)); bottom: clamp(8px, 2.2vh, 34px); display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; z-index: 1; }
+  /* large screens: logos 15% smaller; scaling about the bottom-left corner keeps
+     the block's left alignment and its distance from the bottom edge unchanged */
+  @media (min-width: 1201px) { .projects__clients { transform: scale(.85); transform-origin: left bottom; } }
+  .client-badge { display: block; margin-inline: -18px; opacity: 0; }
+  .projects__clients.in .client-badge { animation: heroRise .55s cubic-bezier(.16,1,.3,1) both; }
+  .projects__clients.in .client-badge:nth-child(2) { animation-delay: .07s; }
+  .projects__clients.in .client-badge:nth-child(3) { animation-delay: .14s; }
+  .projects__clients.in .client-badge:nth-child(4) { animation-delay: .21s; }
+  .projects__clients.in .client-badge:nth-child(5) { animation-delay: .28s; }
+  .projects__clients.in .client-badge:nth-child(6) { animation-delay: .35s; }
+  .projects__clients.in .client-badge:nth-child(7) { animation-delay: .42s; }
+  .projects__clients.in .client-badge:nth-child(8) { animation-delay: .49s; }
+  .projects__clients.in .client-badge:nth-child(9) { animation-delay: .56s; }
+  .projects__clients.in .client-badge:nth-child(10) { animation-delay: .63s; }
+  .projects__clients.out .client-badge { animation: heroOut .3s cubic-bezier(.3,0,.2,1) both; }
+  .projects__clients.out .client-badge:nth-child(2) { animation-delay: .035s; }
+  .projects__clients.out .client-badge:nth-child(3) { animation-delay: .07s; }
+  .projects__clients.out .client-badge:nth-child(4) { animation-delay: .105s; }
+  .projects__clients.out .client-badge:nth-child(5) { animation-delay: .14s; }
+  .projects__clients.out .client-badge:nth-child(6) { animation-delay: .175s; }
+  .projects__clients.out .client-badge:nth-child(7) { animation-delay: .21s; }
+  .projects__clients.out .client-badge:nth-child(8) { animation-delay: .245s; }
+  .projects__clients.out .client-badge:nth-child(9) { animation-delay: .28s; }
+  .projects__clients.out .client-badge:nth-child(10) { animation-delay: .315s; }
   .client-badge img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
-  .projects__band { position: absolute; left: 0; right: 0; top: 50%; height: 300px; margin-top: -150px; pointer-events: none; z-index: -1; opacity: .5; filter: blur(80px); }
+  .projects__band { position: absolute; left: 0; right: 0; top: 50%; height: 300px; margin-top: -150px; pointer-events: none; z-index: -1; opacity: .5; }
   .projects__topfade { position: absolute; left: 0; right: 0; top: 0; height: clamp(120px, 22vh, 240px); background: linear-gradient(180deg, #000 0%, rgba(0,0,0,.82) 38%, rgba(0,0,0,0) 100%); pointer-events: none; z-index: 2; }
-  .projects__band-layer { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+  .projects__band-layer { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; filter: blur(80px); }
   .projects__band-layer.is-on { opacity: 1; }
+
+  /* ---------- about scene (phase 6) ---------- */
+  .about { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; }
+  .about__glow { position: fixed; left: 50%; top: 40%; width: min(1400px, 94vw); height: 360px; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; filter: blur(100px); z-index: 2; background: linear-gradient(90deg, #0b2a6a, #2a0170, #47023c, #a52e12, #b88831, #8a5a52, #4a2f72); }
+  .about__body { position: absolute; left: 0; right: 0; top: calc(var(--text-top) - var(--body-lift)); bottom: 24px; padding: clamp(10px, 2vh, 32px) var(--pad-x) 0; display: flex; flex-direction: column; justify-content: flex-start; gap: clamp(12px, 2.2vh, 32px); }
+  .about__stats { width: 100%; max-width: 1680px; margin-inline: auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .about__stat { display: flex; flex-direction: column; gap: clamp(10px, 1.6vh, 20px); padding: 0 clamp(18px, 2.6vw, 56px); }
+  .about__stat:first-child { padding-left: 0; }
+  .about__stat:last-child { padding-right: 0; }
+  .about__stat:not(:first-child) { border-left: 1px solid rgba(255,255,255,.1); }
+  .about__stat-num { display: block; font-family: var(--font); font-weight: 600; font-size: 64px; line-height: 1.04; letter-spacing: -.02em; color: #fff; }
+  .about__stat-text { margin: 0; font-size: clamp(13px, .9vw, 21px); line-height: 1.5; color: rgba(255,255,255,.9); }
+  .about__list { width: 100%; max-width: 1680px; margin: clamp(18px, 3.4vh, 48px) auto 0; display: flex; flex-direction: column; }
+  .about__row { display: grid; grid-template-columns: minmax(220px, 32%) 1fr; column-gap: clamp(24px, 4vw, 88px); border-top: 1px solid rgba(255,255,255,.1); }
+  .about__row:last-child { border-bottom: 1px solid rgba(255,255,255,.1); }
+  .about__row dt { margin: 0; padding: clamp(5px, 0.95vh, 13px) 0; text-align: left; font-size: clamp(10px, .74vw, 13px); line-height: 1.35; color: rgba(255,255,255,.45); }
+  .about__row dd { margin: 0; padding: clamp(5px, 0.95vh, 13px) 0; text-align: left; font-size: clamp(11px, .8vw, 14px); line-height: 1.4; color: rgba(255,255,255,.82); }
+  /* the lighter "next screen" with the legal text, and the dark sheet that scrolls
+     up over it (rounded bottom corners, no border) */
+  .about__base { position: fixed; inset: 0; z-index: 1; overflow: hidden; background: #000; opacity: 0; pointer-events: none; }
+  .about__video { position: absolute; left: 50%; bottom: -112px; transform: translateX(-50%); width: 100%; height: clamp(350px, 73vh, 1200px); object-fit: cover; object-position: center bottom; display: block; pointer-events: none; }
+  .about__screen { position: fixed; inset: 0; z-index: 1; overflow: hidden; background: #000; opacity: 0; pointer-events: none; will-change: transform, opacity; }
+  /* horizontal semi-transparent gradient along the bottom edge of the scrolling
+     "О компании" screen (same palette as the "Экспертиза" bottom gradient) */
+  .about__screen::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(150px, 30vh, 400px);
+    background-image: linear-gradient(90deg,
+      #020082 0%, #2a0170 5%, #47023c 10%, #7a0a1b 15%, #a52e12 19%, #a75613 23%, #b88831 27%, #bb9c42 31%,
+      #b08d36 35%, #9c6d28 38%, #8a5a52 42%, #4a2f72 45%, #22106a 48%, #020082 50%,
+      #2a0170 55%, #47023c 60%, #7a0a1b 65%, #a52e12 69%, #a75613 73%, #b88831 77%, #bb9c42 81%,
+      #b08d36 85%, #9c6d28 88%, #8a5a52 92%, #4a2f72 95%, #22106a 98%, #020082 100%);
+    opacity: 0; transition: opacity .7s ease;
+    -webkit-mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.5) 45%, transparent 100%); mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.5) 45%, transparent 100%);
+    pointer-events: none; }
+  .about__screen.is-lit::after { opacity: .17; }
+  .about__footer { position: absolute; left: 0; right: 0; bottom: clamp(24px, 6.6vh, 94px); z-index: 1; width: 100%; max-width: min(1680px, calc(100% - 2 * var(--pad-x))); margin: 0 auto; padding: 0; pointer-events: auto; }
+  .about__toprow { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 64px; }
+  .about__brand { display: inline-flex; align-items: center; gap: 24px; margin: 0; font-family: var(--font); font-weight: 600; font-size: 27px; letter-spacing: -.01em; line-height: 1; color: #fff; }
+  .about__totop { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; flex: none; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: #fff; cursor: pointer; pointer-events: auto; transition: background-color .18s ease, border-color .18s ease; }
+  .about__totop:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.34); }
+  .about__totop:active { transform: translateY(1px); }
+  .about__totop svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .about__brand-logo { display: block; width: 54px; height: 54px; }
+  .about__legal { margin: 0 0 clamp(16px, 2.4vh, 26px); font-size: clamp(11px, .76vw, 13.5px); line-height: 1.5; color: #fff; text-align: left; }
+  .about__copyright { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid rgba(255,255,255,.18); padding-top: clamp(42px, calc(2.6vh + 24px), 54px); font-size: clamp(12px, .82vw, 15px); color: #fff; }
+  .about__copyright a { color: #fff; pointer-events: auto; transition: opacity .18s ease; }
+  .about__copyright a:hover { opacity: .7; }
+  .about__copyright a:hover { color: #fff; }
+  /* widen only the gap between the legal text block and the divider line (the
+     last paragraph's bottom margin); the gap between the two paragraphs and
+     the logo gap are left untouched */
+  @media (min-width: 901px) { .about__legal:last-of-type { margin-bottom: clamp(40px, calc(2.4vh + 24px), 50px); } }
+  .about__stat, .about__row { opacity: 0; }
+  @media (max-width: 900px) { .about__body { gap: 5px; padding-top: clamp(6px, 1.2vh, 12px); } .about__stat { gap: 3px; padding: 0 8px; } .about__stat-num { font-size: 20px; } .about__stat-text { line-height: 1.34; } .about__list { margin-top: 3px; } .about__row { grid-template-columns: 1fr; row-gap: 0; } .about__row dt { padding: 2px 0 0; font-size: 8.5px; } .about__row dd { padding: 1px 0 2px; font-size: 9px; } .about__legal { font-size: 7.5px; margin-bottom: 3px; line-height: 1.4; } .about__copyright { flex-wrap: wrap; font-size: 10px; padding-top: 4px; } }
 
   /* ---------- request modal ---------- */
   .modal { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 24px; }
@@ -183,21 +304,29 @@
   .modal__done-title { margin: 0 0 10px; font-family: var(--font); font-weight: 600; font-size: 22px; color: #fff; }
   .modal__done-text { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.62); }
   @media (max-width: 560px) { .modal__dialog { padding: 28px 22px; border-radius: 20px; } }
-  .project-card { position: relative; width: 100%; aspect-ratio: 16 / 9; box-sizing: border-box; padding: 36px; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; background: rgba(255,255,255,.05); display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+  @property --card-in { syntax: "<number>"; inherits: false; initial-value: 1; }
+  @property --card-zoom { syntax: "<number>"; inherits: false; initial-value: 1; }
+  .project-card { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; box-sizing: border-box; padding: 36px; border-radius: 20px; background: rgba(255,255,255,.05); overflow: hidden; pointer-events: auto; cursor: pointer;
+    opacity: calc(var(--rv-op, 1) * var(--card-in)); transform: translateY(var(--rv-ty, 0px)) scale(calc((1 - (1 - var(--card-in)) * .08) * var(--card-zoom))); transition: --card-in .55s cubic-bezier(.4, 0, .2, 1), filter .55s cubic-bezier(.4, 0, .2, 1), --card-zoom .45s cubic-bezier(.16,1,.3,1); }
+  .project-card:hover { --card-zoom: 1.025; }
+  .project-card.is-gone { --card-in: 0; filter: blur(9px); pointer-events: none; }
+  /* soft coloured glow behind each project card (ExpertMe / Мой Экспорт /
+     E-assessment / Nokia) */
+  .project-card:nth-child(1) { box-shadow: 0 0 150px 8px rgba(59,130,246,.38); }
+  .project-card:nth-child(2) { box-shadow: 0 0 150px 8px rgba(242,90,43,.38); }
+  .project-card:nth-child(3) { box-shadow: 0 0 150px 8px rgba(34,197,94,.38); }
+  .project-card:nth-child(4) { box-shadow: 0 0 150px 8px rgba(168,85,247,.38); }
   .project-card__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .project-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,.06) 45%, rgba(0,0,0,.6) 100%); }
-  .project-card__num { position: absolute; top: 36px; left: 36px; z-index: 1; font-size: 14px; letter-spacing: .1em; color: rgba(255,255,255,.85); }
   .project-card__title { margin: 0 0 10px; font-family: var(--font); font-weight: 600; font-size: clamp(22px, 1.7vw, 32px); letter-spacing: -.01em; color: #fff; }
   .project-card__text { margin: 0; font-size: clamp(13px, .85vw, 16px); line-height: 1.5; color: rgba(255,255,255,.62); }
   @media (max-width: 1280px) {
-    .projects { --rail-w: min(34vw, 420px); }
-    .projects__rail { gap: 40px; }
+    .projects__rail { gap: 60px; }
   }
   @media (max-width: 700px) {
-    .projects { --rail-w: 44%; --mid-gap: 16px; }
-    .projects__rail { gap: 24px; }
+    .projects { --mid-gap: 16px; }
+    .projects__rail { gap: 36px; }
     .project-card { padding: 18px; }
-    .project-card__num { top: 18px; left: 18px; font-size: 11px; }
   }
   .services__text { margin: 0; color: rgba(255,255,255,.9); font-size: clamp(13px, .9vw, 21px); line-height: 1.6; white-space: nowrap; opacity: 0; }
   .services__head { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 24px; }
@@ -206,10 +335,18 @@
   .services__text.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .18s both; }
   .services__tags.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .3s both; }
   .services__title.in { animation: heroRise .7s cubic-bezier(.16,1,.3,1) both; }
-  .services__cards { width: 100%; max-width: 1680px; margin-inline: auto; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1vw, 14px); flex: 0 0 auto; }
-  .card { margin: 0; padding: 36px 22px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: linear-gradient(160deg, rgba(139,92,246,.09), rgba(255,255,255,.06) 55%); text-align: left; opacity: 0; display: flex; flex-direction: column; overflow: hidden; }
-  .card__title { margin: 0 0 26px; font-family: var(--font); font-weight: 600; font-size: clamp(15px, 1.35vw, 26px); line-height: 1.15; letter-spacing: -.01em; color: #fff; flex: 0 0 auto; }
-  .card__text { margin: 0; font-size: clamp(12px, .8vw, 15px); line-height: 1.55; color: rgba(255,255,255,.62); overflow: hidden; }
+  .services__cards { width: 100%; max-width: 1680px; margin: auto; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; flex: 0 0 auto; }
+  .services.open .services__cards { pointer-events: auto; }
+  .card { position: relative; margin: 0; padding: clamp(16px, 2.6vh, 34px) clamp(18px, 2.6vw, 56px); border: 0; border-radius: 0; background: transparent; text-align: left; opacity: 0; display: flex; flex-direction: column; gap: clamp(10px, 1.6vh, 20px); }
+  .card:first-child { padding-left: 0; }
+  .card:last-child { padding-right: 0; }
+  .card:not(:first-child) { border-left: 1px solid rgba(255,255,255,.1); }
+  .card::before { content: ""; position: absolute; left: 0; top: 0; width: 0; height: 1px; background: linear-gradient(90deg, var(--accent), rgba(139,92,246,0)); transition: width .55s cubic-bezier(.16,1,.3,1); }
+  .card:hover::before { width: 100%; }
+  .card__title { margin: 0; font-family: var(--font); font-weight: 600; font-size: clamp(15px, 1.5vw, 24px); line-height: 1.12; letter-spacing: -.02em; color: #fff; flex: 0 0 auto; }
+  @media (min-width: 701px) { .card__title { white-space: nowrap; } }
+  .card__text { margin: 0; font-size: clamp(11px, min(.84vw, 1.9vh), 15px); line-height: 1.55; color: rgba(255,255,255,.62); overflow: hidden; transition: color .3s ease; }
+  .card:hover .card__text { color: rgba(255,255,255,.76); }
   .services__cards.in .card { animation: heroRise .7s cubic-bezier(.16,1,.3,1) .42s both; }
   .services__cards.in .card:nth-child(2) { animation-delay: .5s; }
   .services__cards.in .card:nth-child(3) { animation-delay: .58s; }
@@ -227,32 +364,46 @@
     .services__text { white-space: normal; font-size: clamp(11px, 1.5vw, 15px); }
     .services__body { bottom: 24px; gap: 12px; }
     .services__tags li { font-size: clamp(9px, 1.2vw, 12px); padding: 3px 9px; }
-    .card { padding: 26px 16px; }
-    .card__title { font-size: clamp(11px, 1.35vw, 16px); margin-bottom: 18px; }
+    .card__title { font-size: clamp(11px, 1.35vw, 16px); }
     .card__text { font-size: clamp(10px, 1.2vw, 13px); line-height: 1.42; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
-    .expertise { gap: 12px; }
+    .expertise__row { padding: 26px 16px; }
+    .expertise__row-title { font-size: clamp(11px, 1.35vw, 16px); }
+    .expertise__row-text { font-size: clamp(10px, 1.2vw, 13px); line-height: 1.42; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
     .expertise__lead { white-space: normal; font-size: clamp(11px, 1.5vw, 15px); }
-    .expertise__chips li { font-size: clamp(8px, .95vw, 10px); padding: 3px 9px; }
-    .expertise__card { padding: 26px 16px; }
-    .expertise__card-title { font-size: clamp(11px, 1.35vw, 16px); margin-bottom: 18px; }
-    .expertise__card-text { font-size: clamp(10px, 1.2vw, 13px); line-height: 1.42; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
-    .expertise__grid { grid-template-columns: repeat(3, 1fr); }
+    .expertise__chips li { padding: 3px 8px; }
+    .about__stat-text { font-size: clamp(11px, 1.5vw, 15px); }
   }
   @media (max-width: 700px) {
-    .services__cards { gap: 5px; }
+    .services__cards { gap: 0; }
     .services__text { font-size: 11px; }
     .services__tags li { font-size: 8px; padding: 2px 7px; }
-    .card { padding: 18px 10px; }
-    .card__title { font-size: clamp(6px, 1.4vw, 13px); margin-bottom: 12px; }
+    .card__title { font-size: clamp(6px, 1.4vw, 13px); }
     .card__text { font-size: 9px; }
-    .expertise__chips { gap: 6px; }
-    .expertise__chips li { font-size: 7px; padding: 2px 5px; }
-    .expertise__card { padding: 18px 10px; }
-    .expertise__card-title { font-size: clamp(6px, 1.4vw, 13px); margin-bottom: 12px; }
-    .expertise__card-text { font-size: 9px; }
+    .expertise { gap: 6px; padding-top: clamp(8px, 1.6vh, 20px); }
+    .expertise__head { gap: 14px; }
+    .expertise__lead { font-size: 11px; }
+    .about__stat-text { font-size: 11px; }
+    .expertise__chips { gap: 10px 5px; }
+    .expertise__chips li { font-size: 7px; padding: 2px 6px; }
+    .expertise__list { margin-top: 0.4vh; }
+    .expertise__row { padding: 14px 10px; gap: 8px; }
+    .expertise__row-heading { gap: 8px; }
+    .expertise__row-title { font-size: clamp(6px, 1.4vw, 13px); }
+    .expertise__row-badge { width: 30px; }
+     .expertise__row-text { font-size: 9px; line-height: 1.38; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; }
   }
 
-  .hero__media { position: absolute; inset: 0; z-index: 0; }
+  /* ---------- on small screens (<=1200px) the 4 service cards sit 24px
+     above the bottom edge; nothing else is moved ---------- */
+  @media (max-width: 1200px) {
+    .services__cards { margin-top: auto; margin-bottom: 0; }
+  }
+
+  /* "О компании": the body texts use a fixed 16px (the small field labels and
+     the copyright line keep their own sizes) */
+  .about__stat-text, .about__row dd, .about__legal { font-size: 16px; }
+
+  .hero__media { position: fixed; inset: 0; z-index: 0; }
   .hero__stage { position: absolute; inset: 0; overflow: hidden; background: #000; }
   .hero__stage video, .hero__stage .hero__fallback { position: absolute; top: -6%; left: 50%; height: 100%; width: auto; transform: translateX(-50%) scale(0.94); }
   .hero__stage .hero__fallback { display: none; }
@@ -264,26 +415,39 @@
   .hero__stage video::-webkit-media-controls-play-button,
   .hero__stage video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none !important; opacity: 0 !important; pointer-events: none !important; }
 
-  .hero__grain { position: absolute; inset: -50%; pointer-events: none; opacity: .08; mix-blend-mode: overlay;
+  .hero__grain { position: absolute; inset: -8%; pointer-events: none; opacity: .08; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 160px 160px; animation: grain .6s steps(2) infinite;
   }
   @keyframes grain { 0% { transform: translate(0,0); } 50% { transform: translate(-4%,3%); } 100% { transform: translate(3%,-3%); } }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .hero__grain { animation: none; } .hero__title, .hero__sub, .hero__clients, .glow::before, .glow-b::before { animation: none; } .services__title.in, .services__text.in, .services__tags.in, .services__cards.in .card, .expertise.in, .expertise__lead.in, .expertise__chips--products.in, .expertise__grid.in, .expertise__tech.in, .projects.in { animation: none; opacity: 1; } .services__title.out, .services__text.out, .services__tags.out, .services__cards.out .card, .expertise.out, .expertise__lead.out, .expertise__chips--products.out, .expertise__grid.out, .expertise__tech.out, .projects.out { animation: none; opacity: 0; } .projects__band, .projects__band-layer { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .hero__grain { animation: none; } .hero__content.out { animation: none; opacity: 0; } .svc-intro__word { animation: none; } .hero__word { animation: none; opacity: 1; } .hero__title, .hero__sub, .hero__clients, .glow::before, .glow-b::before { animation: none; } .services__title.in, .services__text.in, .services__tags.in, .services__cards.in .card, .expertise.in, .expertise__lead.in, .expertise__chips--products.in, .expertise__tech.in, .projects.in, .projects__clients.in .client-badge { animation: none; opacity: 1; } .services__title.out, .services__text.out, .services__tags.out, .services__cards.out .card, .expertise.out, .expertise__lead.out, .expertise__chips--products.out, .expertise__tech.out, .projects.out, .projects__clients.out .client-badge { animation: none; opacity: 0; } .projects__band, .projects__band-layer, .about__screen::after { transition: none; } }
 
+  /* hero word — lives in the hero flow so it scrolls natively with the video */
+  .hero__flash { position: fixed; left: 0; right: 0; top: calc(0.427 * 100dvh - 0.073 * var(--headline-fs)); display: flex; justify-content: center; transform: translateY(-50%); pointer-events: none; z-index: 1; mix-blend-mode: overlay; }
+  .hero__flash-word { font-family: var(--font); font-weight: 500; letter-spacing: -.03em; line-height: 1; white-space: nowrap; font-size: var(--headline-fs); color: #fff; will-change: transform, opacity; }
+  /* large screens: the big hero word is 20% smaller; <=1200px keeps its size */
+  @media (min-width: 1201px) { .hero__flash-word { font-size: calc(var(--headline-fs) * .8); } }
+  .hero__flash.swap-out .hero__flash-word { animation: headOut .24s cubic-bezier(.4,0,.8,1) both; }
+  .hero__flash.swap .hero__flash-word { animation: headIn .45s cubic-bezier(.16,1,.3,1) both; }
+  @media (prefers-reduced-motion: reduce) { .hero__flash-word { animation: none; } }
   /* text over the video */
   .hero__content { position: fixed; inset: 0; z-index: 4; pointer-events: none; display: flex; align-items: center; justify-content: center; text-align: center; padding-inline: var(--pad-x); transform: translateY(-6%); }
+  .hero__content.out { animation: lockupOut .6s cubic-bezier(.3,0,.2,1) both; }
+  @keyframes lockupOut { 0% { opacity: 1; transform: translateY(-6%); } 45% { opacity: 1; transform: translateY(calc(-6% - 20px)); } 100% { opacity: 0; transform: translateY(calc(-6% - 38px)); } }
   @keyframes heroRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-  .hero__title { position: relative; font-family: var(--font); font-weight: 500; letter-spacing: -.01em; color: #fff;
+  .hero__title { display: none; position: relative; font-family: var(--font); font-weight: 500; letter-spacing: -.01em;
     font-size: 5.3333vh; line-height: 1.12; text-wrap: balance;
-    animation: heroRise .7s cubic-bezier(.16,1,.3,1) .05s both;
   }
-  .hero__word { display: inline; position: relative; z-index: 1; }
-  .hero__sep { display: inline-block; overflow: hidden; padding: 0 .3em; position: relative; z-index: 1; }
+  .hero__word { display: inline-block; position: relative; z-index: 1; background-image: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: wordRise .75s cubic-bezier(.16,1,.3,1) both; }
+  .hero__title > .hero__word:nth-child(1) { animation-delay: 0s; }
+  .hero__title > .hero__word:nth-child(3) { animation-delay: .55s; }
+  .hero__title > .hero__word:nth-child(5) { animation-delay: 1.1s; }
+  @keyframes wordRise { from { opacity: 0; transform: translateY(.55em); } to { opacity: 1; transform: translateY(0); } }
+  .hero__sep { display: inline-block; overflow: hidden; padding: 0 .3em; position: relative; z-index: 1; background-image: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
    .hero__logo { position: absolute; top: 50%; right: calc(100% + 24px); height: 2em; width: 2em; overflow: visible; opacity: 0; transform: translateY(-50%) translateX(24px); }
   .hero__logo .lg-letters { opacity: 1; }
-  .hero__lab { position: absolute; top: calc(50% + .10em); left: calc(100% + .28em); opacity: 0; transform: translateY(-50%) translateX(-2.4em); }
+  .hero__lab { position: absolute; top: calc(50% + .10em); left: calc(100% + .28em); opacity: 0; transform: translateY(-50%) translateX(-2.4em); background-image: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 
   .hero__sub { position: fixed; left: 0; right: 0; top: calc(78% - 24px); z-index: 2; padding-inline: var(--pad-x); text-align: center;
     color: #fff; font-size: 16px; line-height: 1.5; white-space: nowrap;
@@ -293,18 +457,128 @@
   .hero__clients { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(0px, calc(0.7vw - 12px), 1px);
     animation: heroRise .7s cubic-bezier(.16,1,.3,1) .38s both; }
   .hero__clients li { display: flex; align-items: center; }
-  .hero__clients img { display: block; height: 64px; width: auto; aspect-ratio: 16 / 9; object-fit: contain; }
+  .hero__clients img { display: block; height: clamp(54px, 5vw, 90px); width: auto; aspect-ratio: 16 / 9; object-fit: contain; }
 
   /* ---------- perf: promote animated layers so transforms/opacity stay on the compositor ---------- */
-  .glow, .glow-b { will-change: transform; }
-  .glow::before, .glow-b::before { will-change: transform; }
-  .brand-band { will-change: opacity; }
+  /* The glow layers used to carry a large blur filter, which is why they were left
+     unpromoted (blurred layers ghost/tile when cached). The blur is gone now, so
+     promoting them lets the browser rasterise them once instead of re-rasterising
+     a 2x-viewport layer mid-scroll (that was freezing the start of "Проекты"). */
+  .glow, .glow-b { will-change: opacity, transform; }
   .hero__logo { will-change: transform, opacity; }
   .card, .services__text, .services__tags,
-  .expertise__lead, .expertise__chips--products, .expertise__card,
+  .expertise__lead, .expertise__chips--products, .expertise__row,
   .projects__rail, .projects__caption { will-change: transform, opacity; }
-  .project-card__bg { will-change: transform; }
+  .project-card { will-change: transform, opacity; }
+  .project-card__bg { will-change: auto; }
+  .about__stat, .about__row, .hdr__nav-glow { will-change: transform, opacity; }
   .hero__grain { will-change: transform; }
+
+  /* TEMP (weight test): gradients off in Проекты and О компании; cards and
+     captions kept. Remove this block to restore the gradients. */
+  .projects__band, .projects__topfade, .about__glow { display: none !important; }
+
+  /* ==================== MOBILE FEED (<=576px) ====================
+     Below 576px the scroll-driven desktop experience is replaced by a
+     plain vertical feed: no video, no scroll animations, no full-height
+     scenes. Just stacked content. */
+  .mfeed { display: none; }
+
+  .mfeed {
+    background: #000;
+    color: #fff;
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+  .mfeed__hero { padding: 88px 0 48px; }
+  .mfeed__hero-media { position: relative; width: 100%; line-height: 0; }
+  .mfeed__hero-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 11.25; object-fit: cover; }
+  .mfeed__title { position: absolute; inset: 0; z-index: 1; margin: 0; padding: 0 20px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(42.5px, 13.75vw, 57.5px); font-weight: 600; letter-spacing: -.02em; line-height: 1; text-shadow: 0 2px 24px rgba(0,0,0,.55); }
+  /* below 500px keep the cycling word inside the poster's oval (-15%) */
+  @media (max-width: 499.98px) { .mfeed__title { font-size: clamp(36.25px, 11.69vw, 48.75px); } }
+  .mfeed__hero-body { padding: 40px 20px 0; text-align: center; }
+  .mfeed__title-word { display: inline-block; will-change: transform, opacity; }
+  .mfeed__title-word.swap-out { animation: headOut .24s cubic-bezier(.4,0,.8,1) both; }
+  .mfeed__title-word.swap { animation: headIn .45s cubic-bezier(.16,1,.3,1) both; }
+  @media (prefers-reduced-motion: reduce) { .mfeed__title-word { animation: none; } }
+  .mfeed__sub { margin: 0 0 32px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); }
+  .mfeed__cta { display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 32px; padding: 0 20px; border: 0; border-radius: 100px; background: #fff; color: #0a0a0a; font-family: var(--font); font-weight: 600; font-size: 16px; cursor: pointer; transition: background-color .18s ease, color .18s ease, transform .18s ease; }
+  .mfeed__cta:hover { background: #5b21b6; color: #fff; }
+  .mfeed__cta:active { transform: translateY(1px); }
+
+  .mfeed__section { padding: 52px 20px; border-top: 1px solid rgba(255,255,255,.1); scroll-margin-top: 88px; }
+  /* static band at the top of "Услуги" / "Экспертиза" / "О компании":
+     violet -> red -> yellow -> blue, colours stretched 2x across the width */
+  .mfeed__gradient { height: 144px; margin: -52px -20px -60px; pointer-events: none; opacity: .36; filter: blur(16px);
+    background-image: linear-gradient(90deg,
+      #8b5cf6 25%, #e11d2a 42%, #e8b84b 58%, #3b82f6 75%);
+    background-size: 200% 100%; background-position: center; background-repeat: no-repeat;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.45) 50%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.45) 50%, transparent 100%); }
+  .mfeed__h2 { margin: 0 0 18px; font-size: clamp(22px, 7vw, 28px); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+  .mfeed__text { margin: 0 0 26px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); }
+
+  .mfeed__clients { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 6px; margin: 0; padding: 0; list-style: none; }
+  .mfeed__clients li { display: flex; align-items: center; }
+  .mfeed__clients img { display: block; height: 44px; width: auto; aspect-ratio: 16 / 9; object-fit: contain; }
+  .mfeed__clients--all { margin-top: 28px; }
+
+  .mfeed__chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 26px; padding: 0; list-style: none; }
+  .mfeed__chips:last-child { margin-bottom: 0; }
+  #m-expertise .mfeed__cards + .mfeed__chips { margin-top: 40px; }
+  .mfeed__chips li { display: inline-flex; align-items: center; padding: 8px 14px; font-size: 13px; line-height: 1.2; border: 1px solid rgba(255,255,255,.14); border-radius: 100px; background: rgba(255,255,255,.05); color: rgba(255,255,255,.85); }
+  /* expertise tags: match the desktop look (amber dot + softer fill) */
+  #m-expertise .mfeed__chips li { gap: 9px; padding: 7px 14px; border-color: rgba(255,255,255,.08); background: rgba(255,255,255,.09); color: #fff; }
+  #m-expertise .mfeed__chips li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--dot, #e8b84b); box-shadow: 0 0 9px 0 color-mix(in srgb, var(--dot, #e8b84b) 60%, transparent); }
+
+  .mfeed__cards { display: flex; flex-direction: column; gap: 16px; }
+  .mfeed__card { padding: 22px; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: rgba(255,255,255,.09); }
+  .mfeed__card h3 { margin: 0 0 10px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+  .mfeed__card p { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255,255,255,.66); }
+  .mfeed__badge { float: right; width: 52px; height: 52px; margin: 0 0 10px 14px; opacity: .94; }
+
+  .mfeed__projects { display: flex; flex-direction: column; gap: 16px; }
+  .mfeed__project { display: block; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: rgba(255,255,255,.09); }
+  .mfeed__project picture, .mfeed__project img { display: block; width: 100%; }
+  .mfeed__project img { aspect-ratio: 16 / 9; object-fit: cover; }
+  .mfeed__project-body { padding: 18px 18px 20px; }
+  .mfeed__project-body h3 { margin: 0 0 8px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .mfeed__project-body p { margin: 0; font-size: 13.5px; line-height: 1.55; color: rgba(255,255,255,.66); }
+
+  .mfeed__stats { display: flex; flex-direction: column; gap: 24px; margin-bottom: 36px; }
+  .mfeed__stat-num { display: block; font-size: clamp(34px, 11vw, 44px); font-weight: 600; letter-spacing: -.02em; line-height: 1; }
+  .mfeed__stat p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.72); }
+
+  .mfeed__list { margin: 0 0 36px; padding: 0; }
+  .mfeed__row { padding: 16px 0; border-top: 1px solid rgba(255,255,255,.1); }
+  .mfeed__row:last-child { border-bottom: 1px solid rgba(255,255,255,.1); }
+  .mfeed__row dt { margin: 0 0 6px; font-size: 12px; line-height: 1.35; color: rgba(255,255,255,.45); }
+  .mfeed__row dd { margin: 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.82); }
+
+  .mfeed__legal { margin: 0 0 20px; font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,.6); }
+
+  .mfeed__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.14); }
+  .mfeed__brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
+  .mfeed__brand img { display: block; width: 34px; height: 34px; }
+  .mfeed__totop { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(255,255,255,.06); color: #fff; cursor: pointer; transition: background-color .18s ease, border-color .18s ease; }
+  .mfeed__totop:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.34); }
+  .mfeed__totop svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .mfeed__copyright { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 0; font-size: 13px; color: rgba(255,255,255,.6); }
+  .mfeed__copyright a { color: #fff; }
+
+  .mfeed__footer-base { position: relative; overflow: hidden; background: #000; }
+  .mfeed__footer-poster { display: block; width: 100%; height: clamp(240px, 62vw, 380px); object-fit: cover; object-position: center bottom; }
+  .mfeed__footer-inner { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 28px 20px 26px; background: linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.2) 42%, rgba(0,0,0,.82) 100%); }
+  .mfeed__footer-base .mfeed__footer { margin: 0; padding: 0; border: 0; }
+  .mfeed__footer-base .mfeed__copyright { margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); }
+
+  @media (max-width: 576px) {
+    .desk { display: none !important; }
+    .mfeed { display: block; }
+    .hdr { background: rgba(0,0,0,.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    /* hamburger dropdown: drop it at the right edge, under the toggle */
+    .hdr.is-open .hdr__nav { left: auto; right: var(--pad-x); width: max-content; min-width: 200px; max-width: calc(100vw - 2 * var(--pad-x)); }
+  }
 </style>
 </head>
 <body>
@@ -319,8 +593,9 @@
       <a href="#services">Услуги</a>
       <a href="#expertise">Экспертиза</a>
       <a href="#projects">Проекты</a>
-      <span class="hdr__nav-item">О компании</span>
+      <a href="#about">О компании</a>
       <a class="hdr__nav-cta" href="#">Обсудить проект</a>
+      <span class="hdr__nav-glow" aria-hidden="true"></span>
     </nav>
     <div class="hdr__right">
       <a class="hdr__mail" href="mailto:help@rndlab.ru">help@rndlab.ru</a>
@@ -333,19 +608,22 @@
   </div>
 </header>
 
+<div class="desk">
 <main class="hero">
   <div class="hero__media">
     <div class="hero__stage">
-      <video webkit-playsinline="" playsinline="" autoplay muted loop preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate nofullscreen" class="preview-large" poster="assets/thermal_abstract_clean_poster.png" aria-label="RnD Lab brand animation">
-        <source src="assets/thermal_abstract_clean.mp4" type="video/mp4">
+      <video webkit-playsinline="" playsinline="" autoplay muted loop preload="metadata" disablepictureinpicture controlslist="nodownload noplaybackrate nofullscreen" poster="assets/thermal_abstract_clean_poster.webp" aria-label="RnD Lab brand animation" width="1920" height="1080">
+        <source src="assets/thermal_abstract_clean.mp4" type="video/mp4" media="(min-width: 577px)">
       </video>
-      <img class="hero__fallback" src="assets/thermal_abstract_clean_poster.png" alt="" aria-hidden="true">
+      <img class="hero__fallback" src="assets/thermal_abstract_clean_poster.webp" width="1920" height="1080" alt="" aria-hidden="true" loading="lazy">
       <div class="hero__grain" aria-hidden="true"></div>
     </div>
   </div>
 
-  <div class="hero__content">
-    <h1 class="hero__title" aria-label="Разработка Нейросети Данные"><svg class="hero__logo" viewBox="0 0 134 134" width="134" height="134" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"><g class="lg-letters" fill="#fff"><path d="M26.2578 63.002V32H39.4492C46.3672 32 50.8359 36.3398 50.8359 42.9785V43.0215C50.8359 49.6602 46.3672 53.9141 39.4492 53.9141H34.1211V63.002H26.2578ZM37.5586 38.0371H34.1211V47.9844H37.5586C40.8887 47.9844 42.8867 46.2441 42.8867 43.0215V42.9785C42.8867 39.7559 40.8887 38.0371 37.5586 38.0371Z"/><path d="M52.4172 63.002V32H60.2805V44.1816H72.634V32H80.4973V63.002H72.634V50.5195H60.2805V63.002H52.4172Z"/><path d="M88.3734 69.125H81.2836V56.6641H83.3891C85.4945 55.0098 86.0102 52.7539 86.2895 48.4785L87.2992 32H110.76V56.6641H114.627V69.125H107.559V63.002H88.3734V69.125ZM93.4867 49.1875C93.2504 52.6035 92.7992 54.9883 91.4887 56.4922V56.6641H102.897V38.3379H94.1957L93.4867 49.1875Z"/><path d="M28.7715 103.324C27.4824 103.324 26.4512 103.131 26 103.002V96.1699C26.3438 96.2344 26.9238 96.3418 27.5898 96.3418C30.4473 96.3418 31.2422 93.8066 31.4355 89.8535L32.252 72H55.0469V103.002H47.1621V78.3379H39.2559L38.6328 90.4121C38.2246 98.3184 35.582 103.324 28.7715 103.324Z"/><path d="M56.177 103.002L66.6398 72H76.2648L86.7062 103.002H78.4348L76.5012 96.1914H66.4035L64.4484 103.002H56.177ZM71.3664 78.7461L68.0148 90.5195H74.8684L71.5168 78.7461H71.3664Z"/><path d="M87.8363 103.002V72H109.75V78.3379H95.7211V83.2793H101.006C107.817 83.2793 112.479 87.125 112.479 92.9688V93.0117C112.479 99.0703 107.967 103.002 101.329 103.002H87.8363ZM95.7211 96.9219H99.3949C102.553 96.9219 104.465 95.5684 104.465 92.9902V92.9473C104.465 90.3691 102.553 88.9941 99.352 88.9941H95.7211V96.9219Z"/></g><path class="lg-br lg-br--tl" d="M0 0H29V10.875H10.875V29H0V0Z" fill="#fff"/><path class="lg-br lg-br--tr" d="M134 0H105V10.875H123.125V29H134V0Z" fill="#fff"/><path class="lg-br lg-br--bl" d="M0 134H29V123.125H10.875V105H0V134Z" fill="#fff"/><path class="lg-br lg-br--br" d="M134 134H105V123.125H123.125V105H134V134Z" fill="#fff"/></svg><span class="hero__word" data-full="Разработка">Разработка</span><span class="hero__sep" aria-hidden="true">\</span><span class="hero__word" data-full="Нейросети">Нейросети</span><span class="hero__sep" aria-hidden="true">\</span><span class="hero__word" data-full="Данные">Данные</span><span class="hero__lab" aria-hidden="true">Лаб</span></h1>
+  <div class="hero__flash" aria-hidden="true"><span class="hero__flash-word">Разработка</span></div>
+
+  <div class="hero__content" aria-hidden="true">
+    <h1 class="hero__title"><span class="hero__word" data-full="Разработка">Разработка</span></h1>
   </div>
 
   <p class="hero__sub">Создаем цифровые инновационные технологии<br>Оптимизируем процессы и разрабатываем ИТ-системы<br>Более 10 лет улучшаем бизнес-показатели компаний</p>
@@ -359,16 +637,15 @@
   </ul>
 </main>
 
-<section class="section" aria-hidden="true"><span id="services" class="section__anchor section__anchor--services"></span><span id="expertise" class="section__anchor section__anchor--expertise"></span><span id="projects" class="section__anchor section__anchor--projects"></span></section>
-<div class="glow" aria-hidden="true"></div>
+<section class="section" aria-hidden="true"><div class="glow" aria-hidden="true"></div><span id="services" class="section__anchor section__anchor--services"></span><span id="expertise" class="section__anchor section__anchor--expertise"></span><span id="projects" class="section__anchor section__anchor--projects"></span><span id="about" class="section__anchor section__anchor--about"></span></section>
 <div class="glow-b" aria-hidden="true"></div>
-<div class="brand-band" aria-hidden="true"></div>
+<div class="about__glow" aria-hidden="true"></div>
 <div class="services" aria-hidden="true">
-  <h2 class="services__title"><span class="svc-word svc-word--a" data-full="Услуги">Услуги</span><span class="svc-word svc-word--b" data-full="Экспертиза"></span><span class="svc-word svc-word--c" data-full="Проекты"></span></h2>
+  <h2 class="services__title"><span class="svc-word svc-word--a" data-full="Услуги">Услуги</span><span class="svc-word svc-word--b" data-full="Экспертиза"></span><span class="svc-word svc-word--c" data-full="Проекты"></span><span class="svc-word svc-word--d" data-full="О компании"></span></h2>
   <div class="services__stage">
   <div class="services__body">
   <div class="services__head">
-  <p class="services__text">Оказываем полный спектр IT-услуг, включая бизнес-аналитику, разработку ПО,<br>создание мобильных приложений и&nbsp;внедрение искусственного интеллекта. Берем на&nbsp;себя<br>весь цикл работ — от&nbsp;проектирования систем до&nbsp;модификации, масштабирования<br>и&nbsp;технического сопровождения ваших текущих программных продуктов</p>
+  <p class="services__text">Разрабатываем IT-решения для&nbsp;вашего бизнеса. Проводим бизнес-аналитику, создаем<br>ПО и&nbsp;мобильные приложения, внедряем ИИ. Сопровождаем проекты на&nbsp;всех этапах:<br>от&nbsp;проектирования архитектуры до&nbsp;масштабирования и&nbsp;техподдержки</p>
   <ul class="services__tags">
     <li>Телеком-операторы</li>
     <li>Финансовые учреждения</li>
@@ -390,24 +667,33 @@
   <div class="expertise">
     <div class="expertise__head">
       <p class="expertise__lead">Наша сила — в&nbsp;проектировании отказоустойчивых архитектур, интеграции нейросетей (AI)<br>и&nbsp;модернизации сложных legacy-систем. Обладаем глубокими техническими компетенциями<br>для&nbsp;цифровой трансформации бизнеса и&nbsp;решения нестандартных технологических задач</p>
+    </div>
+      <div class="expertise__list">
+        <article class="expertise__row">
+          <div class="expertise__row-heading"><h3 class="expertise__row-title">Профессиональная команда</h3></div>
+          <p class="expertise__row-text">За время работы мы накопили огромную экспертизу в&nbsp;разработке программного обеспечения и&nbsp;современных технологиях. Наши сотрудники входят в&nbsp;список топ-выпускников школ по&nbsp;работе с&nbsp;большими данными, побеждают в&nbsp;хакатонах и&nbsp;конкурсах, прошли более 2000 часов курсов и&nbsp;тренингов по&nbsp;аналитике данных</p>
+        </article>
+        <article class="expertise__row">
+          <div class="expertise__row-heading"><h3 class="expertise__row-title">Внимание к&nbsp;деталям</h3></div>
+          <p class="expertise__row-text">Прямые линии должны быть прямыми, а&nbsp;параллельные — параллельными. Отступы, шрифты, скорость отклика, время обработки запроса, SEO для&nbsp;сайтов, отображение страниц на&nbsp;разных платформах, в&nbsp;разных разрешениях и&nbsp;браузерах и&nbsp;многое другое всегда в&nbsp;фокусе нашего внимания</p>
+        </article>
+        <article class="expertise__row">
+          <div class="expertise__row-heading"><h3 class="expertise__row-title">Результат</h3><img class="expertise__row-badge" src="assets/guinness.svg" alt="" width="36" height="36"></div>
+          <p class="expertise__row-text">Мы создаем высокоэффективные системы. Нашими продуктами пользуются первые лица государства, а&nbsp;программное обеспечение установило рекорд Гиннесса. Системы компании работают в&nbsp;каждой третьей торговой точке России</p>
+        </article>
+      </div>
       <ul class="expertise__chips expertise__chips--products">
         <li>Информационные системы</li>
         <li>Корпоративные системы</li>
         <li>Web-порталы</li>
         <li>Мобильные приложения</li>
-        <li>Облачные сервисы</li>
-        <li>Системы искусственного интеллекта</li>
         <li>Системы больших данных (Big Data)</li>
+        <li>Системы искусственного интеллекта</li>
+        <li>Облачные сервисы</li>
         <li>Геораспределенные высоконагруженные системы</li>
         <li>Экосистемы цифровых продуктов</li>
         <li>Системы управления процессами и&nbsp;логистикой</li>
       </ul>
-      </div>
-      <div class="expertise__grid">
-        <article class="expertise__card"><h3 class="expertise__card-title">Профессиональная команда</h3><p class="expertise__card-text">За время работы мы накопили огромную экспертизу в&nbsp;разработке программного обеспечения и&nbsp;современных технологиях. Наши сотрудники входят в&nbsp;список топ-выпускников школ по&nbsp;работе с&nbsp;большими данными, побеждают в&nbsp;хакатонах и&nbsp;конкурсах, прошли более 2000 часов курсов и&nbsp;тренингов по&nbsp;аналитике данных</p></article>
-        <article class="expertise__card"><h3 class="expertise__card-title">Внимание к&nbsp;деталям</h3><p class="expertise__card-text">Прямые линии должны быть прямыми, а&nbsp;параллельные — параллельными. Отступы, шрифты, скорость отклика, время обработки запроса, SEO для&nbsp;сайтов, отображение страниц на&nbsp;разных платформах, в&nbsp;разных разрешениях и&nbsp;браузерах и&nbsp;многое другое всегда в&nbsp;фокусе нашего внимания</p></article>
-        <article class="expertise__card"><img class="expertise__card-badge" src="assets/guinness.svg" alt="" width="64" height="64"><h3 class="expertise__card-title">Результат</h3><p class="expertise__card-text">Мы нацелены на&nbsp;достижение создаваемыми системами исключительно высоких результатов. Созданными нами продуктами пользуются первые лица государства, с&nbsp;помощью разработанного нами ПО был установлен рекорд Книги рекордов Гиннеса, созданные нашими специалистами системы работают в&nbsp;каждой третьей торговой точке России</p></article>
-      </div>
   </div>
   <div class="projects">
     <div class="projects__band" aria-hidden="true"><span class="projects__band-layer"></span><span class="projects__band-layer"></span></div>
@@ -415,6 +701,7 @@
     <div class="projects__caption">
       <h3 class="projects__caption-title">Наши проекты</h3>
       <p class="projects__caption-text">Продукты и&nbsp;системы, которыми пользуются крупнейшие компании и&nbsp;государственные структуры</p>
+      <a class="projects__caption-link" href="https://expertme.ru/" target="_blank" rel="noopener noreferrer"><span class="projects__caption-link-text">expertme.ru</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
     </div>
     <div class="projects__clients">
       <span class="client-badge"><img src="assets/clients16/01.svg" alt="ВЭБ РФ" loading="lazy"></span>
@@ -429,13 +716,188 @@
       <span class="client-badge"><img src="assets/clients16/10.svg" alt="Илим" loading="lazy"></span>
     </div>
     <div class="projects__rail">
-      <article class="project-card"><img class="project-card__bg" src="assets/nokia_bg.jpg" alt="" loading="lazy" decoding="async"><span class="project-card__scrim" aria-hidden="true"></span><span class="project-card__num">01</span></article>
-      <article class="project-card"><img class="project-card__bg" src="assets/nokia_bg.jpg" alt="" loading="lazy" decoding="async"><span class="project-card__scrim" aria-hidden="true"></span><span class="project-card__num">02</span></article>
-      <article class="project-card"><img class="project-card__bg" src="assets/nokia_bg.jpg" alt="" loading="lazy" decoding="async"><span class="project-card__scrim" aria-hidden="true"></span><span class="project-card__num">03</span></article>
-      <article class="project-card"><img class="project-card__bg" src="assets/nokia_bg.jpg" alt="" loading="lazy" decoding="async"><span class="project-card__scrim" aria-hidden="true"></span><span class="project-card__num">04</span></article>
+      <a class="project-card" href="https://expertme.ru/" target="_blank" rel="noopener noreferrer"><picture><source type="image/webp" srcset="assets/expertme.webp"><img class="project-card__bg" src="assets/expertme.jpg" alt="ExpertMe" loading="lazy" decoding="async" width="1120" height="630"></picture><span class="project-card__scrim" aria-hidden="true"></span></a>
+      <a class="project-card" href="https://e-assessment.pro/" target="_blank" rel="noopener noreferrer"><picture><source type="image/webp" srcset="assets/e-assessment.webp"><img class="project-card__bg" src="assets/e-assessment.jpg" alt="E-assessment" loading="lazy" decoding="async" width="1120" height="630"></picture><span class="project-card__scrim" aria-hidden="true"></span></a>
+      <a class="project-card" href="https://myexport.exportcenter.ru/" target="_blank" rel="noopener noreferrer"><picture><source type="image/webp" srcset="assets/myexport.webp"><img class="project-card__bg" src="assets/myexport.jpg" alt="Мой Экспорт" loading="lazy" decoding="async" width="1120" height="630"></picture><span class="project-card__scrim" aria-hidden="true"></span></a>
+      <a class="project-card" href="https://www.nokia.com/" target="_blank" rel="noopener noreferrer"><picture><source type="image/webp" srcset="assets/nokia.webp"><img class="project-card__bg" src="assets/nokia.jpg" alt="Nokia" loading="lazy" decoding="async" width="1120" height="630"></picture><span class="project-card__scrim" aria-hidden="true"></span></a>
     </div>
   </div>
 </div>
+<div class="about__base" aria-hidden="true">
+  <video class="about__video" muted loop playsinline preload="none" poster="assets/footer_poster.webp" width="4096" height="826">
+    <source src="assets/footer_loop.mp4" type="video/mp4" media="(min-width: 577px)">
+  </video>
+  <div class="about__footer">
+    <div class="about__toprow">
+      <a class="about__brand" href="#">
+        <img class="about__brand-logo" src="assets/logo.svg" alt="" width="108" height="108">
+        <span>РНД Лаб</span>
+      </a>
+      <button class="about__totop" type="button" aria-label="Наверх">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+      </button>
+    </div>
+    <p class="about__legal">Информация, содержащая описание реализуемых (разрабатываемых) товаров, и&nbsp;(или) выполняемых ООО&nbsp;«РнД&nbsp;Лаб» работ, и&nbsp;(или) оказываемых услуг размещена в&nbsp;разделах «Услуги».</p>
+    <p class="about__legal">Стоимость комплексных услуг и&nbsp;работ по&nbsp;проектам в&nbsp;области информационных технологий, разрабатываемым ООО&nbsp;«РнД&nbsp;Лаб», определяется на&nbsp;конкурсной основе, а&nbsp;также согласовывается между компанией и&nbsp;клиентом в&nbsp;индивидуальном порядке, исходя из&nbsp;объема и&nbsp;сложности работ / услуг, с&nbsp;соблюдением требований законодательства в&nbsp;отношении коммерческой тайны. Средняя стоимость часа работы специалиста для&nbsp;создания решения под&nbsp;ключ составляет 4&nbsp;900&nbsp;рублей.</p>
+    <div class="about__copyright"><span>© РНД Лаб</span><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></div>
+  </div>
+</div>
+<div class="about__screen" aria-hidden="true"></div>
+<div class="svc-intro" aria-hidden="true"><span class="svc-intro__word">Разработка</span></div>
+  <div class="about">
+    <div class="about__body">
+      <div class="about__stats">
+        <div class="about__stat"><span class="about__stat-num">10+</span><p class="about__stat-text">лет опыта в&nbsp;цифровых технологиях для&nbsp;быстрого старта и&nbsp;достижения целей вашего бизнеса</p></div>
+        <div class="about__stat"><span class="about__stat-num">99%</span><p class="about__stat-text">клиентов доверяют нам задачи и&nbsp;регулярно возвращаются с&nbsp;новыми проектами</p></div>
+        <div class="about__stat"><span class="about__stat-num">50+</span><p class="about__stat-text">сложных экосистем и&nbsp;highload-платформ запущено нами для&nbsp;телекома, финтеха и&nbsp;промышленности</p></div>
+      </div>
+      <dl class="about__list">
+        <div class="about__row"><dt>Полное наименование организации</dt><dd>Общество с&nbsp;ограниченной ответственностью «РнД&nbsp;Лаб»</dd></div>
+        <div class="about__row"><dt>Юридический адрес</dt><dd>143362, Московская область, Наро-Фоминский район, город Апрелевка, Жасминовая ул., д.&nbsp;6, кв.&nbsp;14</dd></div>
+        <div class="about__row"><dt>Номер в&nbsp;реестре аккредитованных организаций</dt><dd>36438</dd></div>
+        <div class="about__row"><dt>ОГРН</dt><dd>1205000037428</dd></div>
+        <div class="about__row"><dt>ИНН / КПП</dt><dd>5030098183 / 503001001</dd></div>
+        <div class="about__row"><dt>Основной вид деятельности</dt><dd>Разработка компьютерного программного обеспечения (62.01)</dd></div>
+        <div class="about__row"><dt>Коды видов деятельности в&nbsp;области информационных технологий</dt><dd>1.01, 1.05, 8.01 — в&nbsp;соответствии с&nbsp;Приказом Министерства цифрового развития, связи и&nbsp;массовых коммуникаций Российской Федерации от&nbsp;11&nbsp;мая 2023&nbsp;г. №&nbsp;449</dd></div>
+      </dl>
+    </div>
+  </div>
+</div><!-- /.desk -->
+
+<div class="mfeed">
+
+  <section class="mfeed__hero">
+    <div class="mfeed__hero-media">
+      <img class="mfeed__hero-img" src="assets/thermal_abstract_clean_poster.webp" width="1920" height="1080" alt="" fetchpriority="high" decoding="async">
+      <h1 class="mfeed__title"><span class="mfeed__title-word">Разработка</span></h1>
+    </div>
+    <div class="mfeed__hero-body">
+    <p class="mfeed__sub">Создаем цифровые инновационные технологии. Оптимизируем процессы и разрабатываем ИТ-системы. Более 10 лет улучшаем бизнес-показатели компаний.</p>
+    <ul class="mfeed__clients" aria-label="Клиенты">
+      <li><img src="assets/clients16/01.svg" alt="ВЭБ РФ" loading="lazy"></li>
+      <li><img src="assets/clients16/07.svg" alt="Норникель" loading="lazy"></li>
+      <li><img src="assets/clients16/06.svg" alt="Merlion" loading="lazy"></li>
+      <li><img src="assets/clients16/04.svg" alt="Металлоинвест" loading="lazy"></li>
+      <li><img src="assets/clients16/05.svg" alt="Nokia" loading="lazy"></li>
+    </ul>
+    <button class="mfeed__cta" type="button" data-modal-open>Обсудить проект</button>
+    </div>
+  </section>
+
+  <section class="mfeed__section" id="m-services">
+    <div class="mfeed__gradient" aria-hidden="true"></div>
+    <h2 class="mfeed__h2">Услуги</h2>
+    <p class="mfeed__text">Разрабатываем IT-решения для вашего бизнеса. Проводим бизнес-аналитику, создаем ПО и мобильные приложения, внедряем ИИ. Сопровождаем проекты на всех этапах: от проектирования архитектуры до масштабирования и техподдержки</p>
+    <ul class="mfeed__chips">
+      <li>Телеком-операторы</li>
+      <li>Финансовые учреждения</li>
+      <li>Государственные структуры</li>
+      <li>Промышленные предприятия</li>
+      <li>Продуктовые IT-компании</li>
+      <li>Стартапы</li>
+      <li>Крупный ритейл</li>
+    </ul>
+    <div class="mfeed__cards">
+      <article class="mfeed__card"><h3>Аналитика и проектирование</h3><p>Определим процессы компании, которые можно улучшить с помощью современных технологий, создадим описания и интерактивные прототипы, подключим внутренние или внешние ресурсы для автоматизации, поможем с реализацией задач по трансформации</p></article>
+      <article class="mfeed__card"><h3>Разработка программного обеспечения</h3><p>Окажем услуги полного цикла по созданию ПО или любую комбинацию: аналитика, разработка, управление, тестирование, внедрение и сопровождение. Умеем делать корпоративные системы, web-порталы, мобильные приложения, облачные сервисы, работаем с системами ИИ и большими данными</p></article>
+      <article class="mfeed__card"><h3>Модификация и поддержка IT-систем</h3><p>Расширим функциональность текущих систем, доработаем и оптимизируем существующий код. Перенесем устаревшие решения на современные технологии, обеспечим стабильную поддержку, обновление зависимостей и бесперебойную работу сервисов</p></article>
+      <article class="mfeed__card"><h3>Искусственный интеллект и большие данные</h3><p>Разработаем и интегрируем интеллектуальные системы, которые оптимизируют ваши процессы и найдут скрытые закономерности в данных. Поможем запустить предиктивную аналитику, настроить рекомендательные модели и обучить нейросети под уникальные задачи вашей компании</p></article>
+    </div>
+  </section>
+
+  <section class="mfeed__section" id="m-expertise">
+    <div class="mfeed__gradient" aria-hidden="true"></div>
+    <h2 class="mfeed__h2">Экспертиза</h2>
+    <p class="mfeed__text">Наша сила — в проектировании отказоустойчивых архитектур, интеграции нейросетей (AI) и модернизации сложных legacy-систем. Обладаем глубокими техническими компетенциями для цифровой трансформации бизнеса и решения нестандартных технологических задач</p>
+    <div class="mfeed__cards">
+      <article class="mfeed__card"><h3>Профессиональная команда</h3><p>За время работы мы накопили огромную экспертизу в разработке программного обеспечения и современных технологиях. Наши сотрудники входят в список топ-выпускников школ по работе с большими данными, побеждают в хакатонах и конкурсах, прошли более 2000 часов курсов и тренингов по аналитике данных</p></article>
+      <article class="mfeed__card"><h3>Внимание к деталям</h3><p>Прямые линии должны быть прямыми, а параллельные — параллельными. Отступы, шрифты, скорость отклика, время обработки запроса, SEO для сайтов, отображение страниц на разных платформах, в разных разрешениях и браузерах и многое другое всегда в фокусе нашего внимания</p></article>
+      <article class="mfeed__card"><img class="mfeed__badge" src="assets/guinness.svg" alt="" width="52" height="52"><h3>Результат</h3><p>Мы создаем высокоэффективные системы. Нашими продуктами пользуются первые лица государства, а программное обеспечение установило рекорд Гиннесса. Системы компании работают в каждой третьей торговой точке России</p></article>
+    </div>
+    <ul class="mfeed__chips">
+      <li>Информационные системы</li>
+      <li>Корпоративные системы</li>
+      <li>Web-порталы</li>
+      <li>Мобильные приложения</li>
+      <li>Системы больших данных (Big Data)</li>
+      <li>Системы искусственного интеллекта</li>
+      <li>Облачные сервисы</li>
+      <li>Геораспределенные высоконагруженные системы</li>
+      <li>Экосистемы цифровых продуктов</li>
+      <li>Системы управления процессами и логистикой</li>
+    </ul>
+  </section>
+
+  <section class="mfeed__section" id="m-projects">
+    <h2 class="mfeed__h2">Наши проекты</h2>
+    <p class="mfeed__text">Продукты и системы, которыми пользуются крупнейшие компании и государственные структуры.</p>
+    <div class="mfeed__projects">
+      <article class="mfeed__project">
+        <picture><source type="image/webp" srcset="assets/expertme.webp"><img src="assets/expertme.jpg" alt="ExpertMe" loading="lazy" decoding="async"></picture>
+        <div class="mfeed__project-body"><h3>ExpertMe</h3><p>Уникальная цифровая B2B-платформа и экосистема для эффективного управления персоналом, развития карьеры и привлечения внешних экспертов под задачи бизнеса</p></div>
+      </article>
+      <article class="mfeed__project">
+        <picture><source type="image/webp" srcset="assets/e-assessment.webp"><img src="assets/e-assessment.jpg" alt="E-assessment" loading="lazy" decoding="async"></picture>
+        <div class="mfeed__project-body"><h3>E-assessment</h3><p>Платформа для комплексного управления квалификацией персонала. Профессиональное решение по цифровизации процессов управления талантами в масштабе крупнейших организаций</p></div>
+      </article>
+      <article class="mfeed__project">
+        <picture><source type="image/webp" srcset="assets/myexport.webp"><img src="assets/myexport.jpg" alt="Мой Экспорт" loading="lazy" decoding="async"></picture>
+        <div class="mfeed__project-body"><h3>Мой Экспорт</h3><p>Единый государственный онлайн-портал, помогающий российским компаниям продавать товары и услуги за рубеж</p></div>
+      </article>
+      <article class="mfeed__project">
+        <picture><source type="image/webp" srcset="assets/nokia.webp"><img src="assets/nokia.jpg" alt="Nokia" loading="lazy" decoding="async"></picture>
+        <div class="mfeed__project-body"><h3>Nokia</h3><p>Экосистема сквозного управления и автоматизации телеком-бизнеса, объединившая в едином цифровом пространстве операционные процессы, задачи команд, проектирование и строительство сотовой сети, а также сквозную логистику и складской учет оборудования</p></div>
+      </article>
+    </div>
+    <ul class="mfeed__clients mfeed__clients--all" aria-label="Клиенты">
+      <li><img src="assets/clients16/01.svg" alt="ВЭБ РФ" loading="lazy"></li>
+      <li><img src="assets/clients16/02.svg" alt="ExpertMe" loading="lazy"></li>
+      <li><img src="assets/clients16/03.svg" alt="Российский экспортный центр" loading="lazy"></li>
+      <li><img src="assets/clients16/04.svg" alt="Металлоинвест" loading="lazy"></li>
+      <li><img src="assets/clients16/05.svg" alt="Nokia" loading="lazy"></li>
+      <li><img src="assets/clients16/06.svg" alt="Merlion" loading="lazy"></li>
+      <li><img src="assets/clients16/07.svg" alt="Норникель" loading="lazy"></li>
+      <li><img src="assets/clients16/08.svg" alt="ФГБУ" loading="lazy"></li>
+      <li><img src="assets/clients16/09.svg" alt="НЛМК" loading="lazy"></li>
+      <li><img src="assets/clients16/10.svg" alt="Илим" loading="lazy"></li>
+    </ul>
+  </section>
+
+  <section class="mfeed__section" id="m-about">
+    <div class="mfeed__gradient" aria-hidden="true"></div>
+    <h2 class="mfeed__h2">О компании</h2>
+    <div class="mfeed__stats">
+      <div class="mfeed__stat"><span class="mfeed__stat-num">10+</span><p>лет опыта в цифровых технологиях для быстрого старта и достижения целей вашего бизнеса</p></div>
+      <div class="mfeed__stat"><span class="mfeed__stat-num">99%</span><p>клиентов доверяют нам задачи и регулярно возвращаются с новыми проектами</p></div>
+      <div class="mfeed__stat"><span class="mfeed__stat-num">50+</span><p>сложных экосистем и highload-платформ запущено нами для телекома, финтеха и промышленности</p></div>
+    </div>
+    <dl class="mfeed__list">
+      <div class="mfeed__row"><dt>Полное наименование организации</dt><dd>Общество с ограниченной ответственностью «РнД Лаб»</dd></div>
+      <div class="mfeed__row"><dt>Юридический адрес</dt><dd>143362, Московская область, Наро-Фоминский район, город Апрелевка, Жасминовая ул., д. 6, кв. 14</dd></div>
+      <div class="mfeed__row"><dt>Номер в реестре аккредитованных организаций</dt><dd>36438</dd></div>
+      <div class="mfeed__row"><dt>ОГРН</dt><dd>1205000037428</dd></div>
+      <div class="mfeed__row"><dt>ИНН / КПП</dt><dd>5030098183 / 503001001</dd></div>
+      <div class="mfeed__row"><dt>Основной вид деятельности</dt><dd>Разработка компьютерного программного обеспечения (62.01)</dd></div>
+      <div class="mfeed__row"><dt>Коды видов деятельности в области информационных технологий</dt><dd>1.01, 1.05, 8.01 — в соответствии с Приказом Министерства цифрового развития, связи и массовых коммуникаций Российской Федерации от 11 мая 2023 г. № 449</dd></div>
+    </dl>
+    <p class="mfeed__legal">Информация, содержащая описание реализуемых (разрабатываемых) товаров, и (или) выполняемых ООО «РнД Лаб» работ, и (или) оказываемых услуг размещена в разделах «Услуги».</p>
+    <p class="mfeed__legal">Стоимость комплексных услуг и работ по проектам в области информационных технологий, разрабатываемым ООО «РнД Лаб», определяется на конкурсной основе, а также согласовывается между компанией и клиентом в индивидуальном порядке, исходя из объема и сложности работ / услуг, с соблюдением требований законодательства в отношении коммерческой тайны. Средняя стоимость часа работы специалиста для создания решения под ключ составляет 4 900 рублей.</p>
+  </section>
+
+  <div class="mfeed__footer-base">
+    <img class="mfeed__footer-poster" src="assets/footer_poster.webp" alt="" width="4096" height="826" loading="lazy" decoding="async">
+    <div class="mfeed__footer-inner">
+      <div class="mfeed__footer">
+        <a class="mfeed__brand" href="#"><img src="assets/logo.svg" alt="" width="34" height="34"><span>РНД Лаб</span></a>
+        <button class="mfeed__totop" type="button" aria-label="Наверх">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+        </button>
+      </div>
+      <div class="mfeed__copyright"><span>© РНД Лаб</span><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></div>
+    </div>
+  </div>
+
+</div><!-- /.mfeed -->
 
 <div class="modal" id="request-modal" aria-hidden="true">
   <div class="modal__overlay" data-close></div>
@@ -459,8 +921,99 @@
 </div>
 
 <script>
+  // ---- mobile (<=576px): run the static feed, never the scroll experience ----
+  var IS_MOBILE = window.matchMedia('(max-width: 576px)').matches;
+  (function () {
+    var mq = window.matchMedia('(max-width: 576px)');
+    // crossing the breakpoint swaps the whole page structure - reload so the
+    // right mode boots cleanly
+    function onChange() { window.location.reload(); }
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+    if (!IS_MOBILE) return;
+    // never fetch or play video on mobile
+    [].slice.call(document.querySelectorAll('video')).forEach(function (v) {
+      try { v.pause(); } catch (e) {}
+      v.removeAttribute('autoplay');
+      v.removeAttribute('src');
+      [].slice.call(v.querySelectorAll('source')).forEach(function (s) { s.removeAttribute('src'); });
+      try { v.load(); } catch (e) {}
+    });
+
+    // hero word cycle on the mobile first screen (Разработка / Нейросети / Данные) -
+    // same three words and swap motion as the main site's hero
+    (function () {
+      var word = document.querySelector('.mfeed__title-word');
+      if (!word) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var words = ['Разработка', 'Нейросети', 'Данные'];
+      var i = 0, timer = null;
+      function step() {
+        i = (i + 1) % words.length;
+        word.classList.remove('swap');
+        word.classList.add('swap-out');
+        setTimeout(function () {
+          word.textContent = words[i];
+          word.classList.remove('swap-out');
+          void word.offsetWidth;
+          word.classList.add('swap');
+        }, 140);
+      }
+      function start() { if (!timer) timer = setInterval(step, 1500); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+        }).observe(word);
+      } else { start(); }
+    })();
+  })();
+
   (function () {
     var video = document.querySelector('.hero__stage video');
+    var stage = document.querySelector('.hero__stage');
+    var media = document.querySelector('.hero__media');
+    var heroFlashEl = document.querySelector('.hero__flash');
+    if (IS_MOBILE) return;
+
+    function heroVisibleNow() {
+      var sy = window.pageYOffset || document.documentElement.scrollTop || 0;
+      return sy < window.innerHeight * 1.02;
+    }
+    function tryPlay() {
+      if (!video || !heroVisibleNow() || !video.paused) return;
+      video.muted = true;
+      video.volume = 0;
+      var p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+    }
+    // Pause the looping hero video once scrolled out of view, and take the whole
+    // hero media stack out of rendering past the hero (the black section covers
+    // it; a live fixed media layer + animated grain blend keep the compositor
+    // busy for the rest of the page). Works with or without the video.
+    function syncHero() {
+      var vis = heroVisibleNow();
+      if (video && !vis && !video.paused) video.pause();
+      if (media) {
+        var want = vis ? '' : 'none';
+        if (media.style.display !== want) {
+          media.style.display = want;
+          if (vis) tryPlay();
+        }
+      }
+      // the cycling hero word is fixed and mixed-blended over the whole page; it
+      // is occluded by the section once past the hero, but a live blend layer
+      // keeps the compositor busy the entire scroll - take it out too
+      if (heroFlashEl) {
+        var wantF = vis ? '' : 'none';
+        if (heroFlashEl.style.display !== wantF) heroFlashEl.style.display = wantF;
+      }
+    }
+    window.addEventListener('scroll', syncHero, { passive: true });
+    window.addEventListener('resize', syncHero);
+    syncHero();
+
     if (!video) return;
 
     // Safari: muted/playsinline must be applied as properties too (content
@@ -477,15 +1030,6 @@
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
     video.disablePictureInPicture = true;
-
-    var heroVisible = true;
-    function tryPlay() {
-      if (!heroVisible || !video.paused) return;
-      video.muted = true;
-      video.volume = 0;
-      var p = video.play();
-      if (p && typeof p.catch === 'function') p.catch(function () {});
-    }
 
     // Reload once with muted already set, so WebKit's autoplay decision is
     // made while the media is known to be silent.
@@ -509,7 +1053,6 @@
 
     // Fallback: if the video cannot start (autoplay blocked or a decode/load
     // error), show the static poster image on top of it — no controls at all.
-    var stage = video.parentNode;
     var fallback = stage && stage.querySelector('.hero__fallback');
     function showFallback() {
       if (fallback && video.paused) stage.classList.add('is-fallback');
@@ -530,20 +1073,6 @@
       if (!video.paused) showVideo();
       if (!video.paused || ++tries > 120) clearInterval(timer);
     }, 200);
-
-    // Pause the looping hero video once it is scrolled out of view: decoding a
-    // full-screen looping video fights the scroll compositor on low-power
-    // machines. It resumes automatically when the hero scrolls back in.
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        for (var i = 0; i < entries.length; i++) {
-          heroVisible = entries[i].isIntersecting;
-          if (heroVisible) tryPlay();
-          else if (!video.paused) video.pause();
-        }
-      }, { threshold: 0 });
-      io.observe(video);
-    }
   })();
 
   (function () {
@@ -558,6 +1087,64 @@
     btn.addEventListener('click', function () { setOpen(!hdr.classList.contains('is-open')); });
     nav.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  })();
+
+  // Menu links jump straight to the target anchor instead of smooth-scrolling
+  // through every scene in between (which would play the whole scroll animation).
+  // Once there, the block's elements fade/rise in (same look as the page's own
+  // entrances). A manual scroll still plays the full scroll-driven animation.
+  (function () {
+    var NAV_ENTER = {
+      '#services': '.services__title, .services__text, .services__tags, .services__cards .card',
+      '#expertise': '.expertise__lead, .expertise__list .expertise__row, .expertise__chips',
+      '#projects': '.projects__caption, .projects__rail .project-card, .projects__clients .client-badge',
+      '#about': '.about__stat, .about__row'
+    };
+    function instantTo(hash) {
+      var el = document.querySelector(hash);
+      if (!el) return false;
+      var y = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0);
+      var html = document.documentElement;
+      var prev = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      html.style.scrollBehavior = prev;
+      return true;
+    }
+    function playEntrance(hash) {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var sel = NAV_ENTER[hash];
+      if (!sel) return;
+      var els = [].slice.call(document.querySelectorAll(sel));
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (!el.animate) continue;
+        if (parseFloat(getComputedStyle(el).opacity) < 0.25) continue; // hidden/gone
+        el.animate(
+          [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 600, delay: Math.min(i, 8) * 55, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
+        );
+      }
+    }
+    [].slice.call(document.querySelectorAll('.hdr__nav a[href^="#"]')).forEach(function (a) {
+      var href = a.getAttribute('href');
+      if (!href || href === '#' || a.classList.contains('hdr__nav-cta')) return;
+      a.addEventListener('click', function (e) {
+        if (IS_MOBILE) {
+          var mtarget = document.querySelector('#m-' + href.slice(1));
+          if (mtarget) {
+            e.preventDefault();
+            mtarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          return;
+        }
+        if (!instantTo(href)) return;
+        e.preventDefault();
+        // make sure the scroll render pass runs at the destination first
+        window.dispatchEvent(new Event('scroll'));
+        requestAnimationFrame(function () { requestAnimationFrame(function () { playEntrance(href); }); });
+      });
+    });
   })();
 
   (function () {
@@ -581,7 +1168,7 @@
       document.body.style.overflow = '';
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
-    [].slice.call(document.querySelectorAll('.hdr__cta, .hdr__nav-cta')).forEach(function (el) {
+    [].slice.call(document.querySelectorAll('.hdr__cta, .hdr__nav-cta, [data-modal-open]')).forEach(function (el) {
       el.addEventListener('click', openModal);
     });
     modal.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeModal(); });
@@ -592,9 +1179,13 @@
       form.hidden = true;
       if (done) done.hidden = false;
     });
+    [].slice.call(document.querySelectorAll('.about__totop, .mfeed__totop')).forEach(function (btn) {
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    });
   })();
 
   (function () {
+    if (IS_MOBILE) return;
     var title = document.querySelector('.hero__title');
     if (!title) return;
     var words = [].slice.call(title.querySelectorAll('.hero__word'));
@@ -615,37 +1206,158 @@
     var svcA = document.querySelector('.svc-word--a');
     var svcB = document.querySelector('.svc-word--b');
     var svcC = document.querySelector('.svc-word--c');
+    var svcD = document.querySelector('.svc-word--d');
+    var svcIntro = document.querySelector('.svc-intro');
+    var svcIntroWord = svcIntro ? svcIntro.querySelector('.svc-intro__word') : null;
+    var heroContent = document.querySelector('.hero__content');
     var svcBody = document.querySelector('.services__body');
     var svcExp = document.querySelector('.expertise');
     var projects = document.querySelector('.projects');
+    var aboutEl = document.querySelector('.about');
+    var aboutStats = [].slice.call(document.querySelectorAll('.about__stat'));
+    var aboutRows = [].slice.call(document.querySelectorAll('.about__row'));
+    var aboutFooter = document.querySelector('.about__footer');
+    var aboutBase = document.querySelector('.about__base');
+    var aboutScreen = document.querySelector('.about__screen');
+    var aboutVideo = document.querySelector('.about__video');
+    if (aboutVideo) {
+      aboutVideo.muted = true;
+      aboutVideo.defaultMuted = true;
+      aboutVideo.setAttribute('muted', '');
+      aboutVideo.disablePictureInPicture = true;
+    }
+    var aboutBodyEl = document.querySelector('.about__body');
+    var aboutStatsWrap = document.querySelector('.about__stats');
+    var aboutListEl = document.querySelector('.about__list');
+    var sectionEl = document.querySelector('.section');
     var projectsRail = document.querySelector('.projects__rail');
     var expLead = document.querySelector('.expertise__lead');
     var expProds = document.querySelector('.expertise__chips--products');
-    var expGrid = document.querySelector('.expertise__grid');
+    var expGrid = document.querySelector('.expertise__list');
     var expTech = document.querySelector('.expertise__tech');
     var frameAL = null, frameAR = null;
+    var logoFrame = null;
+    // Measure the logo-frame geometry. This reads layout (getBoundingClientRect +
+    // range rects) which forces a synchronous layout, so it is only called while
+    // the logo morph is actually moving - not on every scroll frame.
+    function measureLogoFrame() {
+      if (!logo) return null;
+      var lr = logo.getBoundingClientRect();
+      if (!(lr.width > 0)) return null;
+      var arm = (29 / 134) * lr.width;
+      var cx = lr.left + lr.width / 2;
+      var clx = cx - 12 - arm, crx = cx + 12 + arm;
+      var flxA = (frameAL == null) ? clx : frameAL;
+      var frxA = (frameAR == null) ? crx : frameAR;
+      var flxB = clx, frxB = crx;
+      if (svcB && svcB.textContent.length) {
+        range.selectNodeContents(svcB);
+        var wB = range.getBoundingClientRect();
+        if (wB && wB.width > 0) { flxB = wB.left - 16 - arm; frxB = wB.right + 11 + arm; }
+      }
+      var flxC = clx, frxC = crx;
+      if (svcC && svcC.textContent.length) {
+        range.selectNodeContents(svcC);
+        var wC = range.getBoundingClientRect();
+        if (wC && wC.width > 0) { flxC = wC.left - 16 - arm; frxC = wC.right + 11 + arm; }
+      }
+      var flxD = clx, frxD = crx;
+      if (svcD && M.wordD) {
+        var dw = svcD.getBoundingClientRect();
+        var dcx = dw.width > 0 ? (dw.left + dw.right) / 2 : (lr.left + lr.width / 2);
+        flxD = dcx - M.wordD / 2 - 16 - arm;
+        frxD = dcx + M.wordD / 2 + 11 + arm;
+      }
+      return { left: lr.left, width: lr.width, ku: 134 / lr.width, clx: clx, crx: crx, flxA: flxA, frxA: frxA, flxB: flxB, frxB: frxB, flxC: flxC, frxC: frxC, flxD: flxD, frxD: frxD };
+    }
     var projTitle = document.querySelector('.projects__caption-title');
     var projText = document.querySelector('.projects__caption-text');
+    var projLink = document.querySelector('.projects__caption-link');
+    var projLinkText = projLink ? projLink.querySelector('.projects__caption-link-text') : null;
     var projCards = [].slice.call(document.querySelectorAll('.project-card'));
     var projData = [
-      { t: 'ExpertMe', d: 'Уникальная цифровая B2B-платформа и\u00a0экосистема для\u00a0эффективного управления персоналом, развития карьеры и\u00a0привлечения внешних экспертов под задачи бизнеса' },
-      { t: 'Мой Экспорт', d: 'Единый государственный онлайн-портал, помогающий российским компаниям продавать товары и\u00a0услуги за\u00a0рубеж' },
-      { t: 'E-assessment', d: 'Платформа для\u00a0комплексного управления квалификацией персонала. Профессиональное решение по\u00a0цифровизации процессов управления талантами в\u00a0масштабе крупнейших организаций' },
-      { t: 'Nokia', d: 'Экосистема сквозного управления и\u00a0автоматизации телеком-бизнеса, объединившая в\u00a0едином цифровом пространстве операционные процессы, задачи команд, проектирование и\u00a0строительство сотовой сети, а\u00a0также сквозную логистику и\u00a0складской учет оборудования' }
+      { t: 'ExpertMe', d: 'Уникальная цифровая B2B-платформа и\u00a0экосистема для\u00a0эффективного управления персоналом, развития карьеры и\u00a0привлечения внешних экспертов под задачи бизнеса', u: 'https://expertme.ru/', l: 'expertme.ru' },
+      { t: 'E-assessment', d: 'Платформа для\u00a0комплексного управления квалификацией персонала. Профессиональное решение по\u00a0цифровизации процессов управления талантами в\u00a0масштабе крупнейших организаций', u: 'https://e-assessment.pro/', l: 'e-assessment.pro' },
+      { t: 'Мой Экспорт', d: 'Единый государственный онлайн-портал, помогающий российским компаниям продавать товары и\u00a0услуги за\u00a0рубеж', u: 'https://myexport.exportcenter.ru/', l: 'myexport.exportcenter.ru' },
+      { t: 'Nokia', d: 'Экосистема сквозного управления и\u00a0автоматизации телеком-бизнеса, объединившая в\u00a0едином цифровом пространстве операционные процессы, задачи команд, проектирование и\u00a0строительство сотовой сети, а\u00a0также сквозную логистику и\u00a0складской учет оборудования', u: 'https://www.nokia.com/', l: 'nokia.com' }
     ];
     var projActive = -1;
+    var projDir = 0, projLastY = -1;
+    var projClientsVis = false;
+    var swapTimer = null, swapTarget = -1;
+    var headNames = ['Услуги', 'Экспертиза', 'Проекты', 'О компании'];
+    var titleCenters = [2.62, 3.95, 6.6];
+    // The big section word stays at full opacity while its section is coming
+    // together, then fades to 25% opacity (+75% transparency) so it no longer
+    // competes with the layout. The final level is reached when the key content
+    // is fully shown: the sub-heading (Услуги / Экспертиза), the client logos
+    // (Проекты) and the numbers row (О компании). Times are in viewport units.
+    var headContentFullAt = [1.12, 3.3, 5.0, 7.07];
+    var headFadeDur = 0.3;
+    var headIdx = -1, headSwapTimer = null, headSwapTarget = -1;
+    var heroWordsCycle = ['Разработка', 'Нейросети', 'Данные'];
+    var heroCycleI = 0, heroCycleTimer = null, heroActive = true;
+    var heroFlash = document.querySelector('.hero__flash');
+    var heroFlashWord = heroFlash ? heroFlash.querySelector('.hero__flash-word') : null;
+    var flashTimer = null;
+    function swapHead(txt) {
+      if (!svcIntro) return;
+      svcIntro.classList.remove('swap');
+      svcIntro.classList.add('swap-out');
+      clearTimeout(headSwapTimer);
+      headSwapTimer = setTimeout(function () {
+        if (svcIntroWord) svcIntroWord.textContent = txt;
+        svcIntro.classList.remove('swap-out');
+        void svcIntro.offsetWidth;
+        svcIntro.classList.add('swap');
+      }, 140);
+    }
+    function flashSwap(txt) {
+      if (!heroFlash) { if (heroFlashWord) heroFlashWord.textContent = txt; return; }
+      heroFlash.classList.remove('swap');
+      heroFlash.classList.add('swap-out');
+      clearTimeout(flashTimer);
+      flashTimer = setTimeout(function () {
+        if (heroFlashWord) heroFlashWord.textContent = txt;
+        heroFlash.classList.remove('swap-out');
+        void heroFlash.offsetWidth;
+        heroFlash.classList.add('swap');
+      }, 140);
+    }
+    function heroCycleStep() {
+      if (!heroActive) return;
+      if (!(heroCycleI === 0 && heroFlashWord && heroFlashWord.textContent === heroWordsCycle[0])) flashSwap(heroWordsCycle[heroCycleI]);
+      heroCycleI = (heroCycleI + 1) % heroWordsCycle.length;
+      heroCycleTimer = setTimeout(heroCycleStep, 2600);
+    }
     var projCaption = document.querySelector('.projects__caption');
+    var projClientsEl = document.querySelector('.projects__clients');
     var projBand = document.querySelector('.projects__band');
-    var projBandLayers = projBand ? [].slice.call(projBand.querySelectorAll('.projects__band-layer')) : [];
+    var projTopfade = document.querySelector('.projects__topfade');
+    var aboutGlow = document.querySelector('.about__glow');
+    var navLinks = [].slice.call(document.querySelectorAll('.hdr__nav a'));
+    var navGlow = document.querySelector('.hdr__nav-glow');
+    var navActive = -2;
+    function updateNav(idx) {
+      if (idx === navActive || !navGlow) return;
+      navActive = idx;
+      if (idx < 0 || !navLinks[idx]) { navGlow.classList.remove('is-on'); navGlow.style.width = '0px'; return; }
+      var link = navLinks[idx], nr = navGlow.parentNode.getBoundingClientRect(), lr = link.getBoundingClientRect();
+      navGlow.style.left = (lr.left - nr.left).toFixed(1) + 'px';
+      navGlow.style.width = lr.width.toFixed(1) + 'px';
+      navGlow.classList.add('is-on');
+    }
+    var projBandLayers = [];
     var projBandIdx = -1;
+    // one pre-rendered band layer per project: switching the active project only
+    // toggles opacity (composited) instead of swapping a background gradient on a
+    // blurred layer (which repainted it and hitched the scroll)
     function setBand(seed) {
-      if (projBandLayers.length < 2) return;
-      var nxt = projBandIdx < 0 ? 0 : (projBandIdx === 0 ? 1 : 0);
-      projBandLayers[nxt].style.backgroundImage = bandGradient(seed);
-      void projBandLayers[nxt].offsetWidth;
-      projBandLayers[nxt].classList.add('is-on');
-      if (projBandIdx >= 0) projBandLayers[projBandIdx].classList.remove('is-on');
-      projBandIdx = nxt;
+      if (!projBandLayers.length || seed === projBandIdx) return;
+      projBandIdx = seed;
+      for (var bi = 0; bi < projBandLayers.length; bi++) {
+        projBandLayers[bi].classList.toggle('is-on', bi === seed);
+      }
     }
     var projPalette = ['#020082', '#2a0170', '#47023c', '#7a0a1b', '#a52e12', '#a75613', '#b88831', '#bb9c42', '#b08d36', '#9c6d28', '#8a5a52', '#4a2f72', '#22106a'];
     var projAccents = ['#8b5cf6', '#e11d2a', '#bb9c42', '#4a9eff'];
@@ -657,19 +1369,30 @@
       for (var j = 0; j < 4; j++) stops.push(projPalette[(seed * 3 + 6 + j) % n] + ' ' + Math.round(80 + j / 3 * 20) + '%');
       return 'linear-gradient(90deg, ' + stops.join(', ') + ')';
     }
+    if (projBand) {
+      projBand.innerHTML = '';
+      for (var pbi = 0; pbi < projData.length; pbi++) {
+        var ply = document.createElement('span');
+        ply.className = 'projects__band-layer';
+        ply.style.backgroundImage = bandGradient(pbi);
+        projBand.appendChild(ply);
+        projBandLayers.push(ply);
+      }
+    }
     var glowB = document.querySelector('.glow-b');
-    var brandBand = document.querySelector('.brand-band');
+    var glowIdle = null, glowBIdle = null;
     var clients = document.querySelector('.hero__clients');
     var sub = document.querySelector('.hero__sub');
     var fullA = svcA ? (svcA.getAttribute('data-full') || 'Услуги') : '';
     var fullB = svcB ? (svcB.getAttribute('data-full') || 'Экспертиза') : '';
     var fullC = svcC ? (svcC.getAttribute('data-full') || 'Проекты') : '';
+    var fullD = svcD ? (svcD.getAttribute('data-full') || 'О компании') : '';
     if (!words.length) return;
     var full = words.map(function (w) { return w.getAttribute('data-full'); });
     var vis = { title: false, text: false, tags: false, cards: false, expertise: false, expLead: false, expProds: false, expGrid: false, expTech: false, projects: false };
     var sepsDone = false;
     var svcCardEls = [].slice.call(document.querySelectorAll('.services__cards .card'));
-    var expCardEls = [].slice.call(document.querySelectorAll('.expertise__grid .expertise__card'));
+    var expCardEls = [].slice.call(document.querySelectorAll('.expertise__list .expertise__row'));
     function applyShow(el, show, key) {
       if (!el || show === vis[key]) return;
       vis[key] = show;
@@ -683,6 +1406,8 @@
     var M = { titleFs: 0, svcTop: 0, svcFs: 0, wordW: 0, logoW: 0, armL: 0, targetLeft: 0, capH: 110 };
     function measure() {
       var W = window.innerWidth, H = window.innerHeight;
+      logoFrame = null;
+      M.bodyLift = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--body-lift')) || 0;
       M.titleFs = parseFloat(getComputedStyle(title).fontSize) || 0;
       if (svcTitle) {
         var stc = parseFloat(getComputedStyle(svcTitle).top);
@@ -701,9 +1426,73 @@
         M.wordW = range.getBoundingClientRect().width || 0;
         svcC.textContent = prev;
       }
+      if (svcD) {
+        var prevD = svcD.textContent;
+        svcD.textContent = fullD;
+        range.selectNodeContents(svcD);
+        M.wordD = range.getBoundingClientRect().width || 0;
+        svcD.textContent = prevD;
+      }
       if (projCaption) M.capH = projCaption.offsetHeight || 110;
+      if (projectsRail && projCards.length) {
+        var savedT = projectsRail.style.transform;
+        projectsRail.style.transform = 'none';
+        M.railTop = projectsRail.getBoundingClientRect().top;
+        M.cardRects = [];
+        for (var ci = 0; ci < projCards.length; ci++) {
+          var rr = projCards[ci].getBoundingClientRect();
+          M.cardRects.push({ t: rr.top - M.railTop, b: rr.bottom - M.railTop });
+        }
+        projectsRail.style.transform = savedT;
+      }
+      if (svcIntro && svcIntroWord) {
+        var savedTr = svcIntro.style.transform, savedWTr = svcIntroWord.style.transform;
+        svcIntro.style.transform = 'none';
+        svcIntroWord.style.transform = 'none';
+        var wrc = svcIntroWord.getBoundingClientRect();
+        M.headCenter = wrc.top + wrc.height / 2;
+        M.headBottom = wrc.bottom;
+        svcIntro.style.transform = savedTr;
+        svcIntroWord.style.transform = savedWTr;
+      }
+      M.isSmall = W <= 900;
+      M.clientsTop = projClientsEl ? projClientsEl.getBoundingClientRect().top : null;
+      // "О компании": the dark screen (content) scrolls up and its rounded bottom
+      // edge uncovers the lighter panel with the legal text underneath. Measure how
+      // far the screen must travel for the whole footer text to be revealed.
+      M.aboutReveal = 0;
+      if (aboutFooter) {
+        var savedAboutTr = aboutEl ? aboutEl.style.transform : '';
+        var savedScreenTr = aboutScreen ? aboutScreen.style.transform : '';
+        var savedSvcTr = svcIntro ? svcIntro.style.transform : '';
+        if (aboutEl) aboutEl.style.transform = 'none';
+        if (aboutScreen) aboutScreen.style.transform = 'none';
+        if (svcIntro) svcIntro.style.transform = 'none';
+        var frect = aboutFooter.getBoundingClientRect();
+        // stop the dark screen 96px above the "Информация..." text, then travel
+        // the base distance plus two more thirds (220px less on big screens).
+        // That leaves the screen too high above the footer, so keep only half of
+        // the resulting gap to the "РНД" logo.
+        var lessScroll = W > 1200 ? 220 : 0;
+        var aboutTravel = (H - frect.top + 96) * 5 / 3 - lessScroll;
+        M.aboutReveal = Math.max(0, Math.round((aboutTravel + (H - frect.top)) / 2));
+        if (aboutEl) aboutEl.style.transform = savedAboutTr;
+        if (aboutScreen) aboutScreen.style.transform = savedScreenTr;
+        if (svcIntro) svcIntro.style.transform = savedSvcTr;
+      }
+      // "О компании": on tall screens drop the numbers row (and everything below
+      // it) by up to 140px, but never further than the free space under the list,
+      // so the content can never cross the bottom edge on short screens. The
+      // measured gap is transform-invariant, so the scroll offset does not matter.
+      if (aboutStatsWrap && aboutListEl && aboutBodyEl) {
+        aboutStatsWrap.style.marginTop = '0px';
+        var aboutFree = aboutBodyEl.getBoundingClientRect().bottom - aboutListEl.getBoundingClientRect().bottom;
+        var aboutLift = Math.max(0, Math.min(140, aboutFree));
+        aboutStatsWrap.style.marginTop = Math.round(aboutLift) + 'px';
+      }
+      if (sectionEl) sectionEl.style.height = Math.round(8.1 * slow * H + M.aboutReveal) + 'px';
     }
-    var holdsH = [[2.0, 0.6], [3.26, 0.3], [3.85, 0.6], [4.66, 0.3], [5.25, 0.6], [6.76, 0.3]];
+    var holdsH = [];
     function offsetBefore(t) {
       var off = 0;
       for (var i = 0; i < holdsH.length; i++) if (holdsH[i][0] < t) off += holdsH[i][1];
@@ -718,18 +1507,36 @@
       }
       return raw - off;
     }
+    // The "Проекты" scene is stretched by PROJ_K so its scroll runs 1/5 slower
+    // (each timeline unit needs 1/5 more scroll); every later scene is shifted by
+    // the same amount so the rest of the page keeps its pace and nothing overlaps.
+    var PROJ_K = 1.5, PROJ_A = 4.5, PROJ_B = 6.6;
+    function projRemap(u, h) {
+      var a = PROJ_A * h, b = a + (PROJ_B - PROJ_A) * PROJ_K * h;
+      if (u <= a) return u;
+      if (u <= b) return a + (u - a) / PROJ_K;
+      return PROJ_B * h + (u - b);
+    }
     function render() {
       ticking = false;
       var h = window.innerHeight || 1;
-      var y = toTimeline((window.pageYOffset || document.documentElement.scrollTop) / slow, h);
+      var y = projRemap(toTimeline((window.pageYOffset || document.documentElement.scrollTop) / slow, h), h);
+      projDir = projLastY < 0 ? 1 : (y > projLastY ? 1 : (y < projLastY ? -1 : 0));
+      projLastY = y;
+      updateNav(y < 1.5 * h ? -1 : (y < 2.4 * h ? 0 : (y < 3.6 * h ? 1 : (y < 6.7 * h ? 2 : 3))));
       var st = function (t) { return t; };
       var seg = function (v, a, b) { return Math.min(1, Math.max(0, (v - a) / (b - a))); };
       var reveal = function (el, inA, inB, outA, outB, amp) {
         if (!el) return;
         var pin = Math.min(1, Math.max(0, (y - inA * h) / ((inB - inA) * h)));
         var pout = Math.min(1, Math.max(0, (y - outA * h) / ((outB - outA) * h)));
-        el.style.opacity = (pin * (1 - pout)).toFixed(3);
-        el.style.transform = 'translateY(' + ((1 - pin) * amp - pout * amp).toFixed(1) + 'px)';
+        // write only when the value actually changed - re-setting the same inline
+        // style every frame invalidates style for ~20 elements and makes the
+        // scroll stutter
+        var op = (pin * (1 - pout)).toFixed(3);
+        if (el.style.opacity !== op) el.style.opacity = op;
+        var tr = 'translateY(' + ((1 - pin) * amp - pout * amp).toFixed(1) + 'px)';
+        if (el.style.transform !== tr) el.style.transform = tr;
       };
       var p1 = Math.min(1, Math.max(0, y / h));
       var e1 = p1;
@@ -737,23 +1544,38 @@
       var e2 = p2;
       var p3 = Math.min(1, Math.max(0, (y - 2 * h) / h));
       var p4 = Math.min(1, Math.max(0, (y - 4 * h) / h));
-      var dissolve = seg(p3, 0, 0.4);
+      // background gradients: the Услуги gradient leaves upward as the section
+      // scrolls away; a matching gradient rises from behind the bottom edge for
+      // Экспертиза and later leaves upward too, before the projects band.
+      var svcGradUp = seg(y, 2.45 * h, 3.05 * h);
+      var expGradIn = seg(y, 2.6 * h, 3.2 * h);
+      // the bottom gradient dissolves gradually, in sync with the rail rising
+      var gradFade = seg(y, 4.5 * h, 6.3 * h);
+      // middle projects band fades in once the first card has risen
+      var bandIn = seg(y, 4.85 * h, 5.4 * h);
       var collapseC = seg(y, 2.62 * h, 2.86 * h);
       var revealU = seg(y, 2.86 * h, 3.25 * h);
-      var svcAShrink = seg(y, 4.0 * h, 4.25 * h);
       var svcBGrow = seg(y, 4.25 * h, 4.65 * h);
-      var expShow = y >= 4.5 * h;
-      var mB = seg(y, 6.0 * h, 6.3 * h);
-      var mC = seg(y, 6.35 * h, 6.75 * h);
-      var mMove = seg(y, 6.75 * h, 7.35 * h);
+      var hIdx = y < 2.3 * h ? 0 : (y < 3.6 * h ? 1 : (y < 6.4 * h ? 2 : 3));
+      var expShow = y >= 2.8 * h && y < 4.0 * h;
+      var mB = seg(y, 3.1 * h, 3.4 * h);
+      var mC = seg(y, 3.45 * h, 3.85 * h);
+      var mMove = seg(y, 3.85 * h, 4.45 * h);
       var mMoveLogo = mMove;
-      var mCards = seg(y, 7.45 * h, 9.2 * h);
+      var mCards = seg(y, 4.55 * h, 6.3 * h);
+      // projects -> about exit choreography (in this order): the active card's
+      // image leaves, then the caption title, then the caption text, then the
+      // client logos, and only then the next section takes over
+      var titleOut = seg(y, 6.34 * h, 6.45 * h);
+      var textOut = seg(y, 6.45 * h, 6.56 * h);
+      var collapseAB = seg(y, 6.65 * h, 6.9 * h);
+      var hugD = seg(y, 6.9 * h, 7.25 * h);
+      var mCenter = seg(y, 7.25 * h, 7.45 * h);
       words.forEach(function (w, i) {
         var len = full[i].length;
         var keep = Math.max(1, Math.round(len - (len - 1) * e1));
         var s = full[i].slice(0, keep);
         if (w.textContent !== s) w.textContent = s;
-        w.style.opacity = 1 - dissolve;
       });
       var applySeps = function () {
         seps.forEach(function (s) {
@@ -765,8 +1587,8 @@
       if (e1 < 0.999) { applySeps(); sepsDone = false; }
       else if (!sepsDone) { applySeps(); sepsDone = true; }
       var W = window.innerWidth;
-      var lockHead = mMove;
-      var lockLogo = mMoveLogo;
+      var lockHead = mMove * (1 - mCenter);
+      var lockLogo = mMoveLogo * (1 - mCenter);
       var dxHead = 0, dxLogo = 0;
       var projSideLeft = null;
       if (svcC && logo) {
@@ -786,76 +1608,167 @@
         var sb = fullB.slice(0, Math.round(fullB.length * svcBGrow * (1 - mB)));
         if (svcB.textContent !== sb) svcB.textContent = sb;
       }
-      if (svcA) {
-        var swA = Math.round(fullA.length * (Math.min(1, revealU) - svcAShrink));
-        var sa = fullA.slice(0, Math.max(0, Math.min(fullA.length, swA)));
-        if (svcA.textContent !== sa) svcA.textContent = sa;
-      }
+      if (svcA && svcA.textContent !== '') svcA.textContent = '';
       if (logo) {
-        logo.style.opacity = e2.toFixed(3);
+        logo.style.opacity = '1';
         logo.style.transform = 'translateY(-50%) translateX(' + (24 * (1 - e2)).toFixed(3) + 'px) translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
       }
-      if (lgLetters) lgLetters.style.opacity = (1 - collapseC).toFixed(3);
-      if (logo && (collapseC > 0.001 || revealU > 0.001 || p4 > 0.001)) {
-        var lr = logo.getBoundingClientRect();
-        var ku = lr.width > 0 ? 134 / lr.width : 0;
-        var arm = (29 / 134) * lr.width;
-        var cx = lr.left + lr.width / 2;
-        var clx = cx - 12 - arm, crx = cx + 12 + arm;
-        if (svcA && svcA.textContent.length && y < 4.0 * h) {
-          range.selectNodeContents(svcA);
-          var wA = range.getBoundingClientRect();
-          if (wA && wA.width > 0) { frameAL = wA.left - 16 - arm; frameAR = wA.right + 11 + arm; }
+      if (lgLetters) lgLetters.style.opacity = e2.toFixed(3);
+      var brOp = e2.toFixed(3);
+      if (brTL) brTL.style.opacity = brOp;
+      if (brTR) brTR.style.opacity = brOp;
+      if (brBL) brBL.style.opacity = brOp;
+      if (brBR) brBR.style.opacity = brOp;
+      if (svcIntro) {
+        var riseT = Math.min(1, Math.max(0, y / h));
+        var panelOn = y > 0.02 * h;
+        var cOp = panelOn ? '0.85' : '0';
+        if (svcIntro.style.opacity !== cOp) svcIntro.style.opacity = cOp;
+        if (heroFlash && heroFlash.style.opacity !== '1') heroFlash.style.opacity = '1';
+        if (heroActive && panelOn) { heroActive = false; clearTimeout(heroCycleTimer); clearTimeout(flashTimer); }
+        else if (!heroActive && !panelOn) { heroActive = true; heroCycleI = 0; heroCycleStep(); }
+        svcIntro.classList.toggle('is-sec', panelOn);
+        if (svcIntroWord) {
+          // The rise is written on the word itself, which is its own compositor
+          // layer (will-change: transform, opacity). Writing the huge gradient
+          // text's transform on the non-promoted container made the browser
+          // repaint it every frame, so it visibly jerked against the (composited)
+          // background while scrolling.
+          //
+          // scroll-driven title sequence, using the same reveal motion as the
+          // section elements: fade out + drift up, then swap word, then fade in
+          // rising up into place - strictly in scroll order with the elements.
+          var tIdx = 0, ti, tTy = 0;
+          for (ti = 0; ti < titleCenters.length; ti++) { if (y >= titleCenters[ti] * h) tIdx = ti + 1; }
+          var tName = headNames[tIdx];
+          var tOp = 1;
+          for (ti = 0; ti < titleCenters.length; ti++) {
+            var tc = titleCenters[ti] * h;
+            if (y < tc && y >= tc - 0.10 * h) { var pf = (tc - y) / (0.10 * h); tOp = pf; tTy = -(1 - pf) * 26; break; }
+            if (y >= tc && y < tc + 0.16 * h) { var qf = (y - tc) / (0.16 * h); tOp = qf; tTy = (1 - qf) * 26; break; }
+          }
+          var wTr = 'translateY(' + ((1 - riseT) * 100).toFixed(2) + 'vh) translateY(' + tTy.toFixed(1) + 'px)';
+          if (svcIntroWord.style.transform !== wTr) svcIntroWord.style.transform = wTr;
+          if (svcIntroWord.textContent !== tName) svcIntroWord.textContent = tName;
+          // fade the word to 25% opacity, fully reached as the section settles
+          var dim = 1;
+          if (tIdx >= 0 && tIdx < headContentFullAt.length) {
+            var doneH = headContentFullAt[tIdx] * h;
+            dim = 1 - 0.75 * seg(y, doneH - headFadeDur * h, doneH);
+          }
+          var tOpStr = (tOp * dim).toFixed(3);
+          if (svcIntroWord.style.opacity !== tOpStr) svcIntroWord.style.opacity = tOpStr;
+        } else if (svcIntro.style.transform) {
+          svcIntro.style.transform = '';
         }
-        var flxA = (frameAL == null) ? clx : frameAL;
-        var frxA = (frameAR == null) ? crx : frameAR;
-        var flxB = clx, frxB = crx;
-        if (svcB && svcB.textContent.length) {
-          range.selectNodeContents(svcB);
-          var wB = range.getBoundingClientRect();
-          if (wB && wB.width > 0) { flxB = wB.left - 16 - arm; frxB = wB.right + 11 + arm; }
-        }
-        var flxC = clx, frxC = crx;
-        if (svcC && svcC.textContent.length) {
-          range.selectNodeContents(svcC);
-          var wC = range.getBoundingClientRect();
-          if (wC && wC.width > 0) { flxC = wC.left - 16 - arm; frxC = wC.right + 11 + arm; }
-        }
+      }
+      if (logo && (collapseC > 0.001 || revealU > 0.001 || p4 > 0.001 || hug2 > 0.001 || hug3 > 0.001)) {
         var c2 = seg(y, 4.25 * h, 4.55 * h);
         var hug1 = seg(y, 2.86 * h, 3.02 * h);
         var hug2 = seg(y, 4.3 * h, 4.65 * h);
         var hug3 = seg(y, 6.35 * h, 6.75 * h);
-        var hfold = function (ax, cxb, fxA, fxB, fxC) {
-          var nx = (1 - collapseC) * ax + collapseC * cxb + (fxA - cxb) * (hug1 - c2) + (fxB - cxb) * hug2 + (fxC - cxb) * hug3;
-          return 'translate(' + ((nx - ax) * ku).toFixed(1) + ' 0)';
-        };
-        if (brTL) brTL.setAttribute('transform', hfold(lr.left, clx, flxA, flxB, flxC));
-        if (brTR) brTR.setAttribute('transform', hfold(lr.left + lr.width, crx, frxA, frxB, frxC));
-        if (brBL) brBL.setAttribute('transform', hfold(lr.left, clx, flxA, flxB, flxC));
-        if (brBR) brBR.setAttribute('transform', hfold(lr.left + lr.width, crx, frxA, frxB, frxC));
+        // only re-measure the (layout-forcing) frame geometry while the logo and
+        // the words are actually moving; otherwise reuse the cached geometry and
+        // just recompute the cheap transforms
+        var logoMoving = (collapseC > 0.001 && collapseC < 0.999) || (revealU > 0.001 && revealU < 0.999)
+          || (p3 > 0.001 && p3 < 0.999) || (mB > 0.001 && mB < 0.999) || (mC > 0.001 && mC < 0.999)
+          || (hug1 > 0.001 && hug1 < 0.999) || (hug2 > 0.001 && hug2 < 0.999) || (hug3 > 0.001 && hug3 < 0.999)
+          || (mMove > 0.001 && mMove < 0.999) || (collapseAB > 0.001 && collapseAB < 0.999) || (hugD > 0.001 && hugD < 0.999);
+        if (logoMoving || !logoFrame) logoFrame = measureLogoFrame();
+        var lf = logoFrame;
+        if (lf) {
+          var hfold = function (ax, cxb, fxA, fxB, fxC, fxD) {
+            var nx = (1 - collapseC) * ax + collapseC * cxb
+              + ((fxA - cxb) * (hug1 - c2) + (fxB - cxb) * hug2 + (fxC - cxb) * hug3) * (1 - collapseAB)
+              + (fxD - cxb) * hugD;
+            return 'translate(' + ((nx - ax) * lf.ku).toFixed(1) + ' 0)';
+          };
+          var vTL = hfold(lf.left, lf.clx, lf.flxA, lf.flxB, lf.flxC, lf.flxD);
+          var vTR = hfold(lf.left + lf.width, lf.crx, lf.frxA, lf.frxB, lf.frxC, lf.frxD);
+          if (brTL && brTL.getAttribute('transform') !== vTL) brTL.setAttribute('transform', vTL);
+          if (brTR && brTR.getAttribute('transform') !== vTR) brTR.setAttribute('transform', vTR);
+          if (brBL && brBL.getAttribute('transform') !== vTL) brBL.setAttribute('transform', vTL);
+          if (brBR && brBR.getAttribute('transform') !== vTR) brBR.setAttribute('transform', vTR);
+        }
       } else {
+        logoFrame = null;
         if (brTL && brTL.getAttribute('transform')) brTL.setAttribute('transform', '');
         if (brTR && brTR.getAttribute('transform')) brTR.setAttribute('transform', '');
         if (brBL && brBL.getAttribute('transform')) brBL.setAttribute('transform', '');
         if (brBR && brBR.getAttribute('transform')) brBR.setAttribute('transform', '');
       }
       if (lab) {
-        lab.style.opacity = e2 * (1 - dissolve);
+        lab.style.opacity = e2;
         lab.style.transform = 'translateY(-50%) translateX(' + (-2.4 * (1 - e2)).toFixed(3) + 'em)';
       }
-      applyShow(svcTitle, revealU > 0, 'title');
-      reveal(svcText, 3.27, 3.39, 3.9, 4.02, 22);
-      reveal(svcTags, 3.38, 3.5, 3.97, 4.09, 22);
-      svcCardEls.forEach(function (c, k) { reveal(c, 3.49 + k * 0.05, 3.61 + k * 0.05, 4.04 + k * 0.05, 4.16 + k * 0.05, 30); });
+      reveal(svcText, 1.0, 1.12, 2.06, 2.16, 22);
+      reveal(svcTags, 1.14, 1.26, 2.18, 2.28, 22);
+      svcCardEls.forEach(function (c, k) { reveal(c, 1.28 + k * 0.05, 1.4 + k * 0.05, 2.3 + k * 0.03, 2.4 + k * 0.03, 30); });
       applyShow(svcExp, expShow, 'expertise');
-      reveal(expLead, 4.7, 4.82, 5.45, 5.58, 22);
-      reveal(expProds, 4.81, 4.93, 5.53, 5.66, 22);
-      expCardEls.forEach(function (c, k) { reveal(c, 4.92 + k * 0.05, 5.04 + k * 0.05, 5.61 + k * 0.05, 5.74 + k * 0.05, 30); });
-      if (projects) projects.style.opacity = seg(y, 7.3 * h, 7.6 * h).toFixed(3);
+      reveal(expLead, 2.85, 2.97, 3.5, 3.63, 22);
+      reveal(expProds, 3.15, 3.3, 3.7, 3.83, 22);
+      expCardEls.forEach(function (c, k) { reveal(c, 3.0 + k * 0.05, 3.12 + k * 0.05, 3.55 + k * 0.05, 3.68 + k * 0.05, 30); });
+      if (projects) { var prOp = seg(y, 4.45 * h, 4.7 * h).toFixed(3); if (projects.style.opacity !== prOp) projects.style.opacity = prOp; }
+      if (projBand) { var bOp = (0.5 * bandIn * (1 - seg(y, 6.1 * h, 6.5 * h))).toFixed(3); if (projBand.style.opacity !== bOp) projBand.style.opacity = bOp; }
+      if (projTopfade) { var tfOp = (1 - seg(y, 6.1 * h, 6.5 * h)).toFixed(3); if (projTopfade.style.opacity !== tfOp) projTopfade.style.opacity = tfOp; }
+      if (aboutGlow) { var agOp = seg(y, 7.6 * h, 7.9 * h).toFixed(3); if (aboutGlow.style.opacity !== agOp) aboutGlow.style.opacity = agOp; }
+      // card entrance/exit feeds --rv-op/--rv-ty so the .is-gone vanish (a real
+      // transition on --card-in, same curve as the caption swap) can stack on top
+      projCards.forEach(function (c, k) {
+        var cpin = seg(y, 4.5 * h, 4.8 * h);
+        var cpout = seg(y, 6.24 * h, 6.34 * h);
+        c.style.setProperty('--rv-op', (cpin * (1 - cpout)).toFixed(3));
+        c.style.setProperty('--rv-ty', ((1 - cpin) * 34 - cpout * 34).toFixed(1) + 'px');
+      });
+      if (projClientsEl) {
+        var clientsShown = y >= 4.5 * h && y < 6.57 * h;
+        if (clientsShown !== projClientsVis) {
+          projClientsVis = clientsShown;
+          projClientsEl.classList.toggle('in', clientsShown);
+          projClientsEl.classList.toggle('out', !clientsShown);
+        }
+      }
+      var aOpTxt = seg(y, 6.66 * h, 6.72 * h).toFixed(3);
+      // base + dark screen switch on instantly (they are fully covered by the
+      // black page at that point) so the footer video/text never flash through
+      // the fading screen at the top of the section
+      var aVis = y >= 6.6 * h ? '1' : '0';
+      if (aboutEl) {
+        if (aboutEl.style.opacity !== aOpTxt) aboutEl.style.opacity = aOpTxt;
+        aboutEl.classList.toggle('is-on', y >= 6.66 * h);
+      }
+      if (aboutBase && aboutBase.style.opacity !== aVis) aboutBase.style.opacity = aVis;
+      if (aboutScreen && aboutScreen.style.opacity !== aVis) aboutScreen.style.opacity = aVis;
+      // the bottom gradient fades in (via .is-lit) instead of popping with the
+      // instantly-toggled screen
+      if (aboutScreen) aboutScreen.classList.toggle('is-lit', aVis === '1');
+      // the footer video only plays while the "О компании" screen is on view; it
+      // is paused (and not decoding) the rest of the time
+      if (aboutVideo) {
+        if (aOpTxt !== '0.000') {
+          if (aboutVideo.paused) { var vp = aboutVideo.play(); if (vp && vp.catch) vp.catch(function () {}); }
+        } else if (!aboutVideo.paused) {
+          aboutVideo.pause();
+        }
+      }
+      // the dark "О компании" screen (heading + numbers + list) scrolls up; its
+      // rounded bottom edge uncovers the lighter panel with the legal text beneath
+      var aSt = (window.pageYOffset || document.documentElement.scrollTop);
+      var aShift = Math.max(0, Math.min(M.aboutReveal || 0, aSt - 8.1 * slow * h));
+      var upTr = aShift > 0.5 ? 'translateY(' + (-aShift).toFixed(1) + 'px)' : '';
+      if (aboutScreen && aboutScreen.style.transform !== upTr) aboutScreen.style.transform = upTr;
+      if (aboutEl && aboutEl.style.transform !== upTr) aboutEl.style.transform = upTr;
+      if (svcIntro && svcIntro.style.transform !== upTr) svcIntro.style.transform = upTr;
+      aboutStats.forEach(function (s, k) { reveal(s, 6.72 + k * 0.045, 6.79 + k * 0.045, 99, 99, 22); });
+      aboutRows.forEach(function (r, k) { reveal(r, 6.78 + k * 0.02, 6.84 + k * 0.02, 99, 99, 22); });
       if (projects && projSideLeft != null) projects.style.setProperty('--side-left', projSideLeft.toFixed(1) + 'px');
       if (svcC) {
-        var sc = fullC.slice(0, Math.round(fullC.length * mC));
+        var sc = fullC.slice(0, Math.round(fullC.length * mC * (1 - collapseAB)));
         if (svcC.textContent !== sc) svcC.textContent = sc;
+      }
+      if (svcD) {
+        var sd = fullD.slice(0, Math.round(fullD.length * hugD));
+        if (svcD.textContent !== sd) svcD.textContent = sd;
       }
       if (svc) svc.classList.toggle('open', p3 >= 0.97 && y < 4.3 * h);
       if (svcExp) svcExp.classList.toggle('open', expShow);
@@ -876,76 +1789,188 @@
       if (svcTitle) {
         if (mMove > 0.001) {
           var ml = 2 * (M.targetLeft - (M.cw / 2 - M.wordW / 2)) * lockHead;
-          svcTitle.style.marginLeft = ml.toFixed(1) + 'px';
+          var mlS = ml.toFixed(1) + 'px';
+          if (svcTitle.style.marginLeft !== mlS) svcTitle.style.marginLeft = mlS;
         } else if (svcTitle.style.marginLeft) svcTitle.style.marginLeft = '';
       }
       if (svcTitle && svcTitle.style.top) svcTitle.style.top = '';
       if (projCaption) {
         if (mMove > 0.001 || mCards > 0.001) {
-          var wantTop = ((h - M.capH) / 2).toFixed(1) + 'px';
+          var wantTop;
+          // small screens: centre the project title + caption in the free space
+          // between the "Проекты" heading and the logos
+          if (M.isSmall && M.headBottom != null && M.clientsTop != null && M.clientsTop > M.headBottom) {
+            wantTop = ((M.headBottom + M.clientsTop) / 2 - M.capH / 2).toFixed(1) + 'px';
+          } else {
+            wantTop = ((h - M.capH) / 2 - (M.bodyLift || 0)).toFixed(1) + 'px';
+          }
           if (projCaption.style.top !== wantTop) projCaption.style.top = wantTop;
         } else if (projCaption.style.top) projCaption.style.top = '';
       }
-      if (glow) glow.style.transform = 'translateY(' + (((1 - p1) - p4) * 100).toFixed(2) + '%)';
-      if (glowB) { glowB.style.transform = 'translateY(' + ((1 - st(seg(p4, 0.35, 1))) * 100).toFixed(2) + '%)'; glowB.style.opacity = (1 - st(seg(y, 5.9 * h, 6.3 * h))).toFixed(3); }
-      if (brandBand) brandBand.style.opacity = (0.28 * Math.min(1, seg(y, 1.4 * h, 1.65 * h)) * (1 - seg(y, 2.05 * h, 2.35 * h))).toFixed(3);
+      if (glow) {
+        var gTr = 'translateY(' + ((-svcGradUp) * 100).toFixed(2) + '%)';
+        if (glow.style.transform !== gTr) glow.style.transform = gTr;
+        // the top gradient is off-screen (translated fully up) from y>=3.05h on -
+        // freeze its endless 45s blur animation there: it is invisible, but the
+        // running animation keeps re-rastering a 2x-viewport blurred layer
+        var glowIdleNow = svcGradUp >= 1;
+        if (glowIdleNow !== glowIdle) { glowIdle = glowIdleNow; glow.classList.toggle('is-idle', glowIdleNow); }
+      }
+      if (glowB) {
+        var gbTr = 'translateY(' + ((1 - expGradIn) * 100).toFixed(2) + '%)';
+        if (glowB.style.transform !== gbTr) glowB.style.transform = gbTr;
+        // the bottom gradient fades in smoothly as the "Проекты" section arrives,
+        // then fades back out later in the section
+        var gbIn = seg(y, 4.0 * h, 4.7 * h);
+        var gbOp = ((1 - gradFade) * gbIn).toFixed(3);
+        if (glowB.style.opacity !== gbOp) glowB.style.opacity = gbOp;
+        // below the fold before it rises (y<2.6h) and fully faded after the
+        // projects rail (y>=6.3h) it is invisible - freeze the animation there
+        var glowBIdleNow = expGradIn <= 0 || gradFade >= 1 || gbIn <= 0;
+        if (glowBIdleNow !== glowBIdle) { glowBIdle = glowBIdleNow; glowB.classList.toggle('is-idle', glowBIdleNow); }
+      }
       if (projectsRail) {
         if (railScrollH_H !== h) { railScrollH = projectsRail.scrollHeight; railScrollH_H = h; }
         var ycap = h * 0.64;
-        projectsRail.style.transform = 'translateY(-' + (mCards * (railScrollH + h - ycap)).toFixed(0) + 'px)';
-        if (projTitle && projText && projCards.length) {
-          var textLevel = (h - M.capH) / 2;
-          var cr = [], ci;
-          for (ci = 0; ci < projCards.length; ci++) cr.push(projCards[ci].getBoundingClientRect());
-          var r0 = cr[0], rN = cr[cr.length - 1];
-          var fadeIn = 1 - seg(r0.top, textLevel, textLevel + 140);
-          var fadeOut = seg(rN.bottom, textLevel, textLevel + 140);
+        var railTy = mCards * (railScrollH + h - ycap);
+        var railTr = 'translate3d(0,' + (-railTy).toFixed(0) + 'px,0)';
+        if (projectsRail.style.transform !== railTr) projectsRail.style.transform = railTr;
+        if (projTitle && projText && projCards.length && M.cardRects) {
+          // cards hand off (vanish + title swap) well before the caption, when the
+          // next card's top reaches just below the description text; the caption's
+          // own fade keeps using the caption's top level
+          var textLevel = (h + M.capH) / 2 + h * 0.1;
+          var fadeLevel = (h - M.capH) / 2;
+          var rTop = M.railTop - railTy, ci;
+          var r0t = rTop + M.cardRects[0].t;
+          var rNb = rTop + M.cardRects[M.cardRects.length - 1].b;
+          var fadeIn = 1 - seg(r0t, fadeLevel, fadeLevel + 140);
+          var fadeOut = seg(rNb, fadeLevel, fadeLevel + 140);
           var capOp = Math.max(0, Math.min(1, fadeIn * fadeOut));
-          if (projCaption) { projCaption.style.opacity = capOp.toFixed(3); projCaption.style.transform = 'translateY(' + ((1 - capOp) * 12).toFixed(1) + 'px)'; }
+          if (projCaption) {
+            var capOpTxt = capOp.toFixed(3);
+            if (projCaption.style.opacity !== capOpTxt) projCaption.style.opacity = capOpTxt;
+            var capTr = 'translateY(' + ((1 - capOp) * 12).toFixed(1) + 'px)';
+            if (projCaption.style.transform !== capTr) projCaption.style.transform = capTr;
+            // only let the caption (and its external link) be clickable while
+            // shown - not once the exit has faded the caption contents
+            var capPE = (capOp > 0.5 && textOut < 0.5) ? 'auto' : 'none';
+            if (projCaption.style.pointerEvents !== capPE) projCaption.style.pointerEvents = capPE;
+          }
+          // sequential caption exit: title first, then text (same fade + slide
+          // motion the caption appears with). Clearing the swap classes lets the
+          // inline opacity through once the swap animation is no longer running.
+          if (projCaption && titleOut > 0.001) {
+            // exiting: make sure no pending/held swap animation keeps the caption
+            // contents (incl. the external link) visible over the next section
+            if (swapTarget >= 0) { clearTimeout(swapTimer); swapTarget = -1; }
+            if (projCaption.classList.contains('swap') || projCaption.classList.contains('swap-out')) {
+              projCaption.classList.remove('swap');
+              projCaption.classList.remove('swap-out');
+            }
+          }
+          if (projTitle) {
+            var toOp = (1 - titleOut).toFixed(3);
+            if (projTitle.style.opacity !== toOp) projTitle.style.opacity = toOp;
+            var toTr = 'translateY(' + (-14 * titleOut).toFixed(1) + 'px)';
+            if (projTitle.style.transform !== toTr) projTitle.style.transform = toTr;
+          }
+          if (projText) {
+            var txOp = (1 - textOut).toFixed(3);
+            if (projText.style.opacity !== txOp) projText.style.opacity = txOp;
+            var txTr = 'translateY(' + (-14 * textOut).toFixed(1) + 'px)';
+            if (projText.style.transform !== txTr) projText.style.transform = txTr;
+          }
+          if (projLink) {
+            var lkOp = (1 - textOut).toFixed(3);
+            if (projLink.style.opacity !== lkOp) projLink.style.opacity = lkOp;
+          }
           if (capOp > 0.01) {
             var bestI = 0;
-            for (ci = 0; ci < cr.length; ci++) {
-              if (cr[ci].top <= textLevel) bestI = ci;
+            for (ci = 0; ci < M.cardRects.length; ci++) {
+              if (rTop + M.cardRects[ci].t <= textLevel) bestI = ci;
             }
             if (bestI !== projActive) {
               projActive = bestI;
-              projTitle.textContent = projData[bestI].t;
-              projText.textContent = projData[bestI].d;
-              M.capH = projCaption.offsetHeight || M.capH;
-              if (projCaption) { projCaption.classList.remove('swap'); void projCaption.offsetWidth; projCaption.classList.add('swap'); }
               setBand(bestI);
+              if (projCaption && textOut < 0.01) {
+                projCaption.classList.remove('swap');
+                projCaption.classList.add('swap-out');
+                swapTarget = bestI;
+                clearTimeout(swapTimer);
+                swapTimer = setTimeout(function () {
+                  if (swapTarget < 0) return;
+                  projTitle.textContent = projData[swapTarget].t;
+                  projText.textContent = projData[swapTarget].d;
+                  if (projLink) { if (projLinkText) projLinkText.textContent = projData[swapTarget].l; projLink.href = projData[swapTarget].u; }
+                  projCaption.classList.remove('swap-out');
+                  void projCaption.offsetWidth;
+                  projCaption.classList.add('swap');
+                  swapTarget = -1;
+                }, 140);
+              }
+            }
+            // Cards vanish (fade + scale + blur) once the next card's title
+            // reaches the handoff line. The last card uses a virtual "next" card
+            // (its own bottom) so it goes with the same effect, near the same
+            // level, as the other three. On the way back a card only returns
+            // once it has slid in a bit further.
+            var cardH = M.cardRects.length ? (M.cardRects[0].b - M.cardRects[0].t) : 0;
+            var revealTop = -h * 0.05;
+            var revealTopLast = (textLevel - cardH) + h * 0.05;
+            for (var gi = 0; gi < projCards.length; gi++) {
+              var isLast = (gi === projCards.length - 1);
+              var nextTop = (gi + 1 < M.cardRects.length)
+                ? (rTop + M.cardRects[gi + 1].t)
+                : (rTop + M.cardRects[gi].t + cardH);
+              if (nextTop > textLevel) { projCards[gi].classList.remove('is-gone'); continue; }
+              if (projDir > 0) { projCards[gi].classList.add('is-gone'); continue; }
+              if (projDir < 0 && (rTop + M.cardRects[gi].t) > (isLast ? revealTopLast : revealTop)) {
+                projCards[gi].classList.remove('is-gone');
+              }
             }
           }
         }
       }
     }
     function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
-    function onResize() { measure(); onScroll(); }
+    function onResize() { navActive = -2; measure(); onScroll(); }
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
     window.addEventListener('load', function () { measure(); onScroll(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     setTimeout(measure, 900);
+    heroCycleStep();
     measure();
     render();
 
+    // Anchor for "Проекты": land where the first card's top is level with the
+    // project caption (its heading). Computed from the rail geometry so it holds
+    // at any viewport size.
     var projAnchor = document.querySelector('.section__anchor--projects');
     var heroEl = document.querySelector('.hero');
     function updateProjectAnchor() {
-      if (!projAnchor || !projectsRail || !heroEl || !svcTitle) return;
+      if (!projAnchor || !projectsRail || !heroEl) return;
       var hh = window.innerHeight || 1;
-      var distance = projectsRail.scrollHeight + hh - hh * 0.64;
-      var capH = 95;
-      var targetTop = (hh - capH) / 2;
-      var m = distance > 0 ? (hh - targetTop) / distance : 0;
-      m = Math.max(0, Math.min(1, m));
-      var yUnits = 7.45 + 1.75 * m;
-      var topPx = (yUnits + offsetBefore(yUnits)) * hh * slow - heroEl.offsetHeight;
-      projAnchor.style.top = Math.round(topPx) + 'px';
+      var railH = projectsRail.scrollHeight || 0;
+      var capH = M.capH || 110;
+      var captionTop;
+      if (M.isSmall && M.headBottom != null && M.clientsTop != null && M.clientsTop > M.headBottom) {
+        captionTop = (M.headBottom + M.clientsTop) / 2 - capH / 2;
+      } else {
+        captionTop = (hh - capH) / 2 - (M.bodyLift || 0);
+      }
+      var wantRailTy = hh - captionTop;
+      var span = railH + hh - hh * 0.64;
+      var mCards = span > 0 ? wantRailTy / span : 0;
+      mCards = Math.max(0, Math.min(1, mCards));
+      var yUnits = 4.575 + mCards * 2.625;
+      projAnchor.style.top = Math.round(yUnits * hh * slow - heroEl.offsetHeight) + 'px';
     }
     updateProjectAnchor();
     window.addEventListener('load', updateProjectAnchor);
     window.addEventListener('resize', updateProjectAnchor);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateProjectAnchor);
   })();
 </script>
 
