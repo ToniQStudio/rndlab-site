@@ -1,0 +1,20 @@
+{
+  "name": "rndlab-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Одностраничный сайт РНД Лаб (статический HTML)",
+  "scripts": {
+    "check": "npm run lint:html && npm run check:links",
+    "lint:html": "html-validate index.html",
+    "check:links": "node scripts/check-links.mjs",
+    "serve": "python3 -m http.server 8080",
+    "check:a11y": "bash scripts/check-a11y.sh",
+    "check:lighthouse": "npx --yes @lhci/cli@0.15 autorun"
+  },
+  "devDependencies": {
+    "html-validate": "^11.16.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
