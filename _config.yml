@@ -1,0 +1,13 @@
+# GitHub Pages: публикуем только сам сайт.
+# Служебные файлы репозитория (правила, конфиги, скрипты) не должны быть
+# доступны по прямым ссылкам на домене сайта.
+exclude:
+  - AGENTS.md
+  - REVIEW.md
+  - package.json
+  - package-lock.json
+  - lighthouserc.json
+  - scripts
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
