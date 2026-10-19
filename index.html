@@ -255,25 +255,30 @@
     -webkit-mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.5) 45%, transparent 100%); mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.5) 45%, transparent 100%);
     pointer-events: none; }
   .about__screen.is-lit::after { opacity: .17; }
-  .about__footer { position: absolute; left: 0; right: 0; bottom: clamp(24px, 6.6vh, 94px); z-index: 1; width: 100%; max-width: min(1680px, calc(100% - 2 * var(--pad-x))); margin: 0 auto; padding: 0; pointer-events: auto; }
-  .about__toprow { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 64px; }
+  .about__footer { --fgap: clamp(18px, 2.4vh, 26px); position: absolute; left: 0; right: 0; bottom: clamp(24px, 6.6vh, 94px); z-index: 1; width: 100%; max-width: min(1680px, calc(100% - 2 * var(--pad-x))); margin: 0 auto; padding: 0; pointer-events: auto; }
+  .about__toprow { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 var(--fgap); }
   .about__brand { display: inline-flex; align-items: center; gap: 24px; margin: 0; font-family: var(--font); font-weight: 600; font-size: 27px; letter-spacing: -.01em; line-height: 1; color: #fff; }
   .about__totop { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; flex: none; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: #fff; cursor: pointer; pointer-events: auto; transition: background-color .18s ease, border-color .18s ease; }
   .about__totop:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.34); }
   .about__totop:active { transform: translateY(1px); }
   .about__totop svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .about__brand-logo { display: block; width: 54px; height: 54px; }
-  .about__legal { margin: 0 0 clamp(16px, 2.4vh, 26px); font-size: clamp(11px, .76vw, 13.5px); line-height: 1.5; color: #fff; text-align: left; }
-  .about__copyright { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid rgba(255,255,255,.18); padding-top: clamp(42px, calc(2.6vh + 24px), 54px); font-size: clamp(12px, .82vw, 15px); color: #fff; }
+  .about__legal { margin: 0 0 var(--fgap); font-size: clamp(11px, .76vw, 13.5px); line-height: 1.5; color: #fff; text-align: left; }
+  .about__credit { margin: 0 0 var(--fgap); font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.6); text-align: left; }
+  .about__credit a { color: #fff; text-decoration: none; transition: opacity .18s ease; }
+  .about__credit a:hover { opacity: .7; }
+  .about__made { font-size: 14px; color: rgba(255,255,255,.6); }
+  .about__made a { color: #fff; text-decoration: none; transition: opacity .18s ease; }
+  .about__made a:hover { opacity: .7; }
+  .about__copyright { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid rgba(255,255,255,.18); padding-top: var(--fgap); font-size: 14px; color: #fff; }
   .about__copyright a { color: #fff; pointer-events: auto; transition: opacity .18s ease; }
   .about__copyright a:hover { opacity: .7; }
   .about__copyright a:hover { color: #fff; }
   /* widen only the gap between the legal text block and the divider line (the
      last paragraph's bottom margin); the gap between the two paragraphs and
      the logo gap are left untouched */
-  @media (min-width: 901px) { .about__legal:last-of-type { margin-bottom: clamp(40px, calc(2.4vh + 24px), 50px); } }
   .about__stat, .about__row { opacity: 0; }
-  @media (max-width: 900px) { .about__body { gap: 5px; padding-top: clamp(6px, 1.2vh, 12px); } .about__stat { gap: 3px; padding: 0 8px; } .about__stat-num { font-size: 20px; } .about__stat-text { line-height: 1.34; } .about__list { margin-top: 3px; } .about__row { grid-template-columns: 1fr; row-gap: 0; } .about__row dt { padding: 2px 0 0; font-size: 8.5px; } .about__row dd { padding: 1px 0 2px; font-size: 9px; } .about__legal { font-size: 7.5px; margin-bottom: 3px; line-height: 1.4; } .about__copyright { flex-wrap: wrap; font-size: 10px; padding-top: 4px; } }
+  @media (max-width: 900px) { .about__body { gap: 5px; padding-top: clamp(6px, 1.2vh, 12px); } .about__stat { gap: 3px; padding: 0 8px; } .about__stat-num { font-size: 20px; } .about__stat-text { line-height: 1.34; } .about__list { margin-top: 3px; } .about__row { grid-template-columns: 1fr; row-gap: 0; } .about__row dt { padding: 2px 0 0; font-size: 8.5px; } .about__row dd { padding: 1px 0 2px; font-size: 9px; } .about__legal { font-size: 7.5px; margin-bottom: 3px; line-height: 1.4; } .about__credit { font-size: 16px; margin-bottom: 3px; line-height: 1.4; } .about__copyright { flex-wrap: wrap; font-size: 14px; padding-top: 4px; } }
 
   /* ---------- request modal ---------- */
   .modal { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 24px; }
@@ -563,13 +568,17 @@
   .mfeed__totop { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(255,255,255,.06); color: #fff; cursor: pointer; transition: background-color .18s ease, border-color .18s ease; }
   .mfeed__totop:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.34); }
   .mfeed__totop svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .mfeed__copyright { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 0; font-size: 13px; color: rgba(255,255,255,.6); }
+  .mfeed__copyright { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 0; font-size: 14px; color: rgba(255,255,255,.6); }
   .mfeed__copyright a { color: #fff; }
 
   .mfeed__footer-base { position: relative; overflow: hidden; background: #000; }
   .mfeed__footer-poster { display: block; width: 100%; height: clamp(240px, 62vw, 380px); object-fit: cover; object-position: center bottom; }
-  .mfeed__footer-inner { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 28px 20px 26px; background: linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.2) 42%, rgba(0,0,0,.82) 100%); }
-  .mfeed__footer-base .mfeed__footer { margin: 0; padding: 0; border: 0; }
+  .mfeed__footer-inner { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; padding: 28px 20px 26px; background: linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.2) 42%, rgba(0,0,0,.82) 100%); }
+  .mfeed__footer-base .mfeed__footer { margin: 0 0 auto; padding: 0; border: 0; }
+  .mfeed__credit { margin: 0 0 16px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.6); text-align: left; }
+  .mfeed__credit a { color: #fff; text-decoration: none; }
+  .mfeed__made { font-size: 14px; color: rgba(255,255,255,.6); }
+  .mfeed__made a { color: #fff; text-decoration: none; }
   .mfeed__footer-base .mfeed__copyright { margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); }
 
   @media (max-width: 576px) {
@@ -739,7 +748,8 @@
     </div>
     <p class="about__legal">Информация, содержащая описание реализуемых (разрабатываемых) товаров, и&nbsp;(или) выполняемых ООО&nbsp;«РнД&nbsp;Лаб» работ, и&nbsp;(или) оказываемых услуг размещена в&nbsp;разделах «Услуги».</p>
     <p class="about__legal">Стоимость комплексных услуг и&nbsp;работ по&nbsp;проектам в&nbsp;области информационных технологий, разрабатываемым ООО&nbsp;«РнД&nbsp;Лаб», определяется на&nbsp;конкурсной основе, а&nbsp;также согласовывается между компанией и&nbsp;клиентом в&nbsp;индивидуальном порядке, исходя из&nbsp;объема и&nbsp;сложности работ / услуг, с&nbsp;соблюдением требований законодательства в&nbsp;отношении коммерческой тайны. Средняя стоимость часа работы специалиста для&nbsp;создания решения под&nbsp;ключ составляет 4&nbsp;900&nbsp;рублей.</p>
-    <div class="about__copyright"><span>© РНД Лаб</span><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></div>
+    <p class="about__credit"><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></p>
+    <div class="about__copyright"><span>© РНД Лаб</span><span class="about__made">Сайт разработан <a href="https://antonminkov.ru" target="_blank" rel="noopener noreferrer">ToniQ Studio</a></span></div>
   </div>
 </div>
 <div class="about__screen" aria-hidden="true"></div>
@@ -893,7 +903,8 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
         </button>
       </div>
-      <div class="mfeed__copyright"><span>© РНД Лаб</span><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></div>
+      <div class="mfeed__credit"><a href="mailto:help@rndlab.ru">help@rndlab.ru</a></div>
+      <div class="mfeed__copyright"><span>© РНД Лаб</span><span class="mfeed__made">Сайт разработан <a href="https://antonminkov.ru" target="_blank" rel="noopener noreferrer">ToniQ Studio</a></span></div>
     </div>
   </div>
 
